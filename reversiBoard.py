@@ -125,12 +125,15 @@ class Tile:
 
 	def highlight(self):
 		self.Tile.setOutline("yellow")
+		self.Tile.setFill("green")
 
 	def redHighlight(self):
 		self.Tile.setOutline("red")
+		self.Tile.setFill("green")
 
 	def clear(self):
 		self.Tile.setOutline(self.color)
+		self.Tile.setFill("darkgreen")
 
 	def isClicked(self,pt):
 		return self.xCoord-0.5 < pt.getX() < self.xCoord+0.5 and self.yCoord-0.5 < pt.getY() < self.yCoord+0.5
