@@ -19,6 +19,9 @@ class Board:
 				tempList.append(Tile(i,j,(i+j)%2,self.win))
 			self.tiles.append(tempList)
 
+	def getBoard(self):
+		return self.tiles
+
 	def getTile(self,x,y):
 		return self.tiles[x][y].getOccupied()
 
