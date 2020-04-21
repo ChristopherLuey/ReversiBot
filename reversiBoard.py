@@ -61,7 +61,7 @@ class Tile:
 	def isClicked(self,pt):
 		return self.xCoord-0.5 < pt.getX() < self.xCoord+0.5 and self.yCoord-0.5 < pt.getY() < self.yCoord+0.5
 
-	def setColor(self,color):
+	def setOccupied(self,color):
 		self.occupied = color
 
 	def getOccupied(self):
