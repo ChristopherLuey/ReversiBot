@@ -73,6 +73,10 @@ class Button:
 			self.box.setOutline(self.color)
 			self.shadow.setOutline(self.shadowColor)
 
+	def setTextColor(self,textColor):
+		#allows the button to change from default colors
+		self.text.setTextColor(textColor)
+
 
 	def setActive(self):
 		#changes the color to the default/specified color, sets status to active
