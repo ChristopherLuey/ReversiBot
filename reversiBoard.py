@@ -19,6 +19,22 @@ class Board:
 				tempList.append(Tile(i,j,self.win))
 			self.tiles.append(tempList)
 
+			#buttons and text
+		self.quitButton = Button(Point(13,1),0.5,1,"QUIT")
+		self.quitButton.setColor("red","maroon")
+		self.quitButton.setActive()
+		self.quitButton.draw(self.win)
+
+		self.textBackground = Rectangle(Point(10,3.5),Point(14,5.5))
+		self.textBackground.setFill("lightgrey")
+		self.textBackground.setOutline("lightgrey")
+		self.textBackground.draw(self.win)
+
+		self.text = Text(Point(12, 5), "")
+		self.text.setSize(16)
+		self.text.setFace("courier")
+		self.text.draw(self.win)
+
 	def getBoard(self):
 		return self.tiles
 
@@ -54,11 +70,13 @@ class Board:
 		b.setActive()
 		w.setActive()
 		p = win.getMouse()
-		
+
 		while True:
 			if b.isClicked(p):
+				win.close()
 				return 'black'
 			elif w.isClicked(p):
+				win.close()
 				return 'white'
 			p = win.getMouse()
 

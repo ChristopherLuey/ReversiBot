@@ -19,6 +19,8 @@ def startGame(bArr, b):
     bArr[4][3].setOccupied("black")
     bArr[3][4].setOccupied("black")
 
+    b.getClick()
+
 
 
 main()
