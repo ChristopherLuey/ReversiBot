@@ -7,13 +7,14 @@ from reversiBoard import *
 def main():
     b = Board()
     bArr = b.getBoard()
+    startGame()
 
 
 
 def startGame():
     bArr[3][3].setOccupied("white")
     bArr[4][4].setOccupied("white")
-    bArr[4][3].setOccupied("white")
-    bArr[3][4].setOccupied("white")
+    bArr[4][3].setOccupied("black")
+    bArr[3][4].setOccupied("black")
 
 main()
