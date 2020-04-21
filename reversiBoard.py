@@ -1,20 +1,29 @@
 from graphics import *
+from Button import *
 
-def createGUI():
 
-	win = GraphWin("window",1500,900)
+class Board:
+	def __init__(self):
 
-	win.setCoords(0,0,15,9)
-	win.setBackground("grey")
+		win = GraphWin("window",1500,900)
 
-	tiles = []
+		win.setCoords(0,0,15,9)
+		win.setBackground("grey")
 
-	#creates the board
-	for i in range(1,9):
-		tempList = []
-		for j in range(1,9):
-			tempList.append(Tile(i,j,(i+j)%2,win))
-		tiles.append(tempList)
+		self.tiles = []
+
+		#creates the board
+		for i in range(1,9):
+			tempList = []
+			for j in range(1,9):
+				tempList.append(Tile(i,j,(i+j)%2,win))
+			self.tiles.append(tempList)
+
+	def getTile(x,y):
+		return self.tiles[x][y].getOccupied()
+
+	def getClick():
+		return win.getMouse()
 
 
 
@@ -34,7 +43,7 @@ class Tile:
 
 		self.xCoord,self.yCoord = xCoord,yCoord
 
-		self.piece = ""
+		self.occupied = ""
 
 	def highlight(self):
 		self.Tile.setOutline("Yellow")
@@ -48,8 +57,12 @@ class Tile:
 	def isClicked(self,pt):
 		return self.xCoord-0.5 < pt.getX() < self.xCoord+0.5 and self.yCoord-0.5 < pt.getY() < self.yCoord+0.5
 
-	def setPiece(self,piece):
-		self.piece = piece
+	def setColor(self,color):
+		self.occupied = color
 
-	def getPiece(self):
-		return self.piece
+	def getOccupied(self):
+		return self.occupied
+
+Board = Board()
+
+print(Board.getClick())

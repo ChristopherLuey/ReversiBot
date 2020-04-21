@@ -101,7 +101,7 @@ class Button:
 	def toTop(self,win):
 		#undraws and redraws button to bring button to top
 		#used if something needs to be drawn behind it
-		self.box.undraw()l
+		self.box.undraw()
 		self.shadow.undraw()
 		self.text.undraw()
 		self.shadow.draw(win)
