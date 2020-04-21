@@ -7,6 +7,7 @@ from reversiBoard import *
 def main():
     b = Board()
     bArr = b.getBoard()
+    startGame()
 
 
 
