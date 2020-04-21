@@ -26,7 +26,7 @@ class Board:
 		return self.tiles[x][y].getOccupied()
 
 	def getClick(self):
-		return [round(self.win.getMouse().getX()),round(self.win.getMouse().getY())]
+		return [round(self.win.getMouse().getX())-1,round(self.win.getMouse().getY())-1]
 
 
 
