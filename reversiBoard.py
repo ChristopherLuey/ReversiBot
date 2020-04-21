@@ -26,7 +26,11 @@ class Board:
 		return self.tiles[x][y].getOccupied()
 
 	def getClick(self):
-		return [round(self.win.getMouse().getX())-1,round(self.win.getMouse().getY())-1]
+		pt = self.win.getMouse()
+		return [round(pt.getX())-1,round(pt.getY())-1]
+
+	def setOccupied(self,x,y,color):
+		self.tiles[x][y].setOccupied(color)
 
 
 
@@ -79,4 +83,6 @@ if __name__ == '__main__':
 	Board = Board()
 
 	while True:
-		print(Board.getClick())
+		pt = Board.getClick()
+		Board.setOccupied(pt[0],pt[1],"black")
+
