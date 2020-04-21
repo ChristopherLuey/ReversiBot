@@ -45,6 +45,25 @@ class Board:
 		pt = self.win.getMouse()
 		return [round(pt.getX())-1,round(pt.getY())-1]
 
+	def quitButtonClicked(self,click):
+		return self.quitButton.isClicked(click)
+
+	def setMessage(message):
+	    #setText of message, modifies message and adds new lines if message is too long to fit width of box
+	    if len(message) > 20:
+	        wordList = message.split()
+	        lineChrCount = 0
+	        message = ""
+	        for word in wordList:
+	            lineChrCount = len(word)+ lineChrCount
+	            if lineChrCount > 20:
+	                message = message + "\n" + word + " "
+	                lineChrCount = len(word)
+	            else:
+	                message = message + word + " "
+
+	    self.text.setText(message)
+
 	def startGame(self):
 		win = GraphWin("Decide Player", 500, 200)
 		mover, moveg, moveb = 90, 117, 8
