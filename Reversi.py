@@ -8,4 +8,10 @@ def main():
     b = Board()
     bArr = b.getBoard()
 
+
+    bArr[3][3].setOccupied("white")
+    bArr[4][4].setOccupied("white")
+    bArr[4][3].setOccupied("white")
+    bArr[3][4].setOccupied("white")
+
 main()
