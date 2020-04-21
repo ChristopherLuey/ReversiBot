@@ -30,7 +30,7 @@ class Board:
 		self.textBackground.setOutline("lightgrey")
 		self.textBackground.draw(self.win)
 
-		self.text = Text(Point(12, 5), "")
+		self.text = Text(Point(12, 4.5), "")
 		self.text.setSize(16)
 		self.text.setFace("courier")
 		self.text.draw(self.win)
@@ -48,15 +48,15 @@ class Board:
 	def quitButtonClicked(self,click):
 		return self.quitButton.isClicked(click)
 
-	def setMessage(message):
+	def setMessage(self,message):
 	    #setText of message, modifies message and adds new lines if message is too long to fit width of box
-	    if len(message) > 20:
+	    if len(message) > 30:
 	        wordList = message.split()
 	        lineChrCount = 0
 	        message = ""
 	        for word in wordList:
 	            lineChrCount = len(word)+ lineChrCount
-	            if lineChrCount > 20:
+	            if lineChrCount > 30:
 	                message = message + "\n" + word + " "
 	                lineChrCount = len(word)
 	            else:
@@ -108,7 +108,7 @@ class Tile:
 		self.fill = "darkgreen"
 
 		self.Tile.setOutline(self.color)
-		self.Tile.setWidth(5)
+		self.Tile.setWidth(2)
 		self.Tile.setFill(self.fill)
 
 		self.Tile.draw(win)
@@ -124,14 +124,12 @@ class Tile:
 		self.piece.draw(win)
 
 	def highlight(self):
-		self.Tile.setWidth(10)
-		self.Tile.setOutline("Yellow")
+		self.Tile.setOutline("yellow")
 
 	def redHighlight(self):
 		self.Tile.setOutline("red")
 
 	def clear(self):
-		self.Tile.setWidth(2)
 		self.Tile.setOutline(self.color)
 
 	def isClicked(self,pt):

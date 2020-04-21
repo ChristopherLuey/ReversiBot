@@ -21,6 +21,12 @@ def startGame(bArr, b):
 
     b.getClick()
 
+    b.setMessage("Hello there my name is Kyler and I really like to mess things up because this is fun but right now I need a really long message to make sure that the text box works as expected.")
+
+    pt = Point(-1,-1)
+    while True:
+    	pt = b.getClick()
+    	bArr[pt[0]][pt[1]].highlight()
 
 
 main()
