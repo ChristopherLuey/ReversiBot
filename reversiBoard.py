@@ -26,7 +26,7 @@ class Board:
 		return self.tiles[x][y].getOccupied()
 
 	def getClick(self):
-		return [round(self.win.getMouse().getX()),round(self.win.getMouse().getY())]
+		return [round(self.win.getMouse().getX())-1,round(self.win.getMouse().getY())-1]
 
 
 
@@ -61,7 +61,7 @@ class Tile:
 	def isClicked(self,pt):
 		return self.xCoord-0.5 < pt.getX() < self.xCoord+0.5 and self.yCoord-0.5 < pt.getY() < self.yCoord+0.5
 
-	def setColor(self,color):
+	def setOccupied(self,color):
 		self.occupied = color
 
 	def getOccupied(self):
