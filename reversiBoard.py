@@ -47,6 +47,12 @@ class Tile:
 
 		self.occupied = ""
 
+		self.piece = Circle(Point(xCoord,yCoord),0.45)
+		self.piece.setFill(self.fill)
+		self.piece.setOutline(self.fill)
+
+		self.piece.draw(win)
+
 	def highlight(self):
 		self.Tile.setWidth(10)
 		self.Tile.setOutline("Yellow")
@@ -62,6 +68,8 @@ class Tile:
 		return self.xCoord-0.5 < pt.getX() < self.xCoord+0.5 and self.yCoord-0.5 < pt.getY() < self.yCoord+0.5
 
 	def setOccupied(self,color):
+		self.piece.setFill(color)
+		self.piece.setOutline(color)
 		self.occupied = color
 
 	def getOccupied(self):
