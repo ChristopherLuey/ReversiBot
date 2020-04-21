@@ -1,4 +1,5 @@
 from graphics import *
+from Button import *
 
 def createGUI():
 
@@ -34,7 +35,7 @@ class Tile:
 
 		self.xCoord,self.yCoord = xCoord,yCoord
 
-		self.piece = ""
+		self.occupied = ""
 
 	def highlight(self):
 		self.Tile.setOutline("Yellow")
@@ -48,8 +49,8 @@ class Tile:
 	def isClicked(self,pt):
 		return self.xCoord-0.5 < pt.getX() < self.xCoord+0.5 and self.yCoord-0.5 < pt.getY() < self.yCoord+0.5
 
-	def setPiece(self,piece):
-		self.piece = piece
+	def setColor(self,color):
+		self.occupied = color
 
-	def getPiece(self):
-		return self.piece
+	def isOccupied(self):
+		return self.occupied
