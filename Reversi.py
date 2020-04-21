@@ -14,4 +14,5 @@ def main():
     bArr[4][3].setOccupied("white")
     bArr[3][4].setOccupied("white")
 
+
 main()
