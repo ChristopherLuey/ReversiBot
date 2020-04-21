@@ -5,10 +5,10 @@ from Button import *
 class Board:
 	def __init__(self):
 
-		win = GraphWin("window",1500,900)
+		self.win = GraphWin("window",1500,900)
 
-		win.setCoords(0,0,15,9)
-		win.setBackground("grey")
+		self.win.setCoords(0,0,15,9)
+		self.win.setBackground("grey")
 
 		self.tiles = []
 
@@ -16,14 +16,14 @@ class Board:
 		for i in range(1,9):
 			tempList = []
 			for j in range(1,9):
-				tempList.append(Tile(i,j,(i+j)%2,win))
+				tempList.append(Tile(i,j,(i+j)%2,self.win))
 			self.tiles.append(tempList)
 
-	def getTile(x,y):
+	def getTile(self,x,y):
 		return self.tiles[x][y].getOccupied()
 
-	def getClick():
-		return win.getMouse()
+	def getClick(self):
+		return self.win.getMouse()
 
 
 
@@ -63,6 +63,3 @@ class Tile:
 	def getOccupied(self):
 		return self.occupied
 
-Board = Board()
-
-print(Board.getClick())
