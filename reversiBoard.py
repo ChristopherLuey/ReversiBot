@@ -19,6 +19,22 @@ class Board:
 				tempList.append(Tile(i,j,self.win))
 			self.tiles.append(tempList)
 
+			#buttons and text
+		self.quitButton = Button(Point(13,1),0.5,1,"QUIT")
+		self.quitButton.setColor("red","maroon")
+		self.quitButton.setActive()
+		self.quitButton.draw(self.win)
+
+		self.textBackground = Rectangle(Point(10,3.5),Point(14,5.5))
+		self.textBackground.setFill("lightgrey")
+		self.textBackground.setOutline("lightgrey")
+		self.textBackground.draw(self.win)
+
+		self.text = Text(Point(12, 4.5), "")
+		self.text.setSize(16)
+		self.text.setFace("courier")
+		self.text.draw(self.win)
+
 	def getBoard(self):
 		return self.tiles
 
@@ -28,6 +44,25 @@ class Board:
 	def getClick(self):
 		pt = self.win.getMouse()
 		return [round(pt.getX())-1,round(pt.getY())-1]
+
+	def quitButtonClicked(self,click):
+		return self.quitButton.isClicked(click)
+
+	def setMessage(self,message):
+	    #setText of message, modifies message and adds new lines if message is too long to fit width of box
+	    if len(message) > 30:
+	        wordList = message.split()
+	        lineChrCount = 0
+	        message = ""
+	        for word in wordList:
+	            lineChrCount = len(word)+ lineChrCount
+	            if lineChrCount > 30:
+	                message = message + "\n" + word + " "
+	                lineChrCount = len(word)
+	            else:
+	                message = message + word + " "
+
+	    self.text.setText(message)
 
 	def startGame(self):
 		win = GraphWin("Decide Player", 500, 200)
@@ -54,11 +89,13 @@ class Board:
 		b.setActive()
 		w.setActive()
 		p = win.getMouse()
-		
+
 		while True:
 			if b.isClicked(p):
+				win.close()
 				return 'black'
 			elif w.isClicked(p):
+				win.close()
 				return 'white'
 			p = win.getMouse()
 
@@ -71,7 +108,7 @@ class Tile:
 		self.fill = "darkgreen"
 
 		self.Tile.setOutline(self.color)
-		self.Tile.setWidth(5)
+		self.Tile.setWidth(2)
 		self.Tile.setFill(self.fill)
 
 		self.Tile.draw(win)
@@ -87,15 +124,16 @@ class Tile:
 		self.piece.draw(win)
 
 	def highlight(self):
-		self.Tile.setWidth(10)
-		self.Tile.setOutline("Yellow")
+		self.Tile.setOutline("yellow")
+		self.Tile.setFill("green")
 
 	def redHighlight(self):
 		self.Tile.setOutline("red")
+		self.Tile.setFill("green")
 
 	def clear(self):
-		self.Tile.setWidth(2)
 		self.Tile.setOutline(self.color)
+		self.Tile.setFill("darkgreen")
 
 	def isClicked(self,pt):
 		return self.xCoord-0.5 < pt.getX() < self.xCoord+0.5 and self.yCoord-0.5 < pt.getY() < self.yCoord+0.5
