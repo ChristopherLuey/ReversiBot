@@ -23,7 +23,7 @@ def startGame(bArr, b):
     bArr[4][3].setOccupied("black")
     bArr[3][4].setOccupied("black")
 
-    b.setMessage("Hello there my name is Kyler and I really like to mess things up because this is fun but right now I need a really long message to make sure that the text box works as expected.")
+    b.setMessage("Hello there my name is Kyler and I really like to mess things up because this is fun but right now I need a really long message to make sure that the text box works as expected. ily")
 
     pt = Point(-1,-1)
     while True:
