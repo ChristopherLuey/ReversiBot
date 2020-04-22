@@ -139,9 +139,14 @@ class Tile:
 		return self.xCoord-0.5 < pt.getX() < self.xCoord+0.5 and self.yCoord-0.5 < pt.getY() < self.yCoord+0.5
 
 	def setOccupied(self,color):
-		self.piece.setFill(color)
-		self.piece.setOutline(color)
-		self.occupied = color
+		if color == "":
+			self.occupied = ""
+			self.piece.setFill(self.fill)
+			self.piece.setOutline(self.fill)
+		else:
+			self.piece.setFill(color)
+			self.piece.setOutline(color)
+			self.occupied = color
 
 	def getOccupied(self):
 		return self.occupied
