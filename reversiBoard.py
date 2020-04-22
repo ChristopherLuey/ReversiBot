@@ -146,10 +146,3 @@ class Tile:
 	def getOccupied(self):
 		return self.occupied
 
-if __name__ == '__main__':
-	Board = Board()
-
-	while True:
-		pt = Board.getClick()
-		Board.setOccupied(pt[0],pt[1],"black")
-

@@ -10,7 +10,8 @@ def main():
     player = startGame(bArr, b)
 
     while True:
-        if player == "black"
+        if player == "black":
+            print("lmao")
 
 
 
@@ -22,9 +23,6 @@ def startGame(bArr, b):
     bArr[4][3].setOccupied("black")
     bArr[3][4].setOccupied("black")
 
-
-<<<<<<< HEAD
-=======
     b.setMessage("Hello there my name is Kyler and I really like to mess things up because this is fun but right now I need a really long message to make sure that the text box works as expected.")
 
     pt = Point(-1,-1)
@@ -33,5 +31,5 @@ def startGame(bArr, b):
     	bArr[pt[0]][pt[1]].highlight()
 
 
->>>>>>> 1bc5d233be4f57098eaf012cd2da6b9020fd470c
+
 main()
