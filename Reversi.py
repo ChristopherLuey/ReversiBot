@@ -9,6 +9,9 @@ def main():
     bArr = b.getBoard()
     player = startGame(bArr, b)
 
+    while True:
+        if player == "black"
+
 
 
 
@@ -18,7 +21,6 @@ def startGame(bArr, b):
     bArr[4][4].setOccupied("white")
     bArr[4][3].setOccupied("black")
     bArr[3][4].setOccupied("black")
-
 
 
 main()
