@@ -68,8 +68,6 @@ class Board:
                   self.utilityScore(self.opponentPotentialFlipsWeight, self.opponentPotentialFlips)
         return utility
 
-
-
     def utilityScore(self, weight, score):
         return weight*score
 
@@ -142,7 +140,6 @@ class Board:
                 numberOfFlips+=1
         return numberOfFlips, flipedSquares
 
-
     def isWithinBoard(self, r, c):
         try:
             return self.boardState[r][c].getOccupied()
@@ -184,15 +181,14 @@ class Board:
 
         return len(stableDisks), stableDisks
 
-
     def calculatePotentialMovesWeight(self, turn):
         return -math.log(turn + 1, self.potentialMovesWeightBase)
 
     def adjustPotentialMovesWeightBase(self, float):
         self.potentialMovesWeightBase = float
 
-
-
+    def calculateOpponentPotentialMovesCount(self):
+        return len(self.calculateLegalMoves(1-player))
 
 
 class Matrix:
@@ -205,3 +201,6 @@ class Matrix:
 
     def adjustWeight(self, row, col, weight):
         self.weightMatrix[row][col] = weight
+
+    def evalutateBoard(self, legalMoves):
+        
