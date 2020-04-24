@@ -14,14 +14,19 @@ class Bot:
 		self.board = Board(boardState, turn, player)
 
 	def alphabeta(board, depth, alpha, beta, maximizingPlayer):
-		legalMoves = board.calculateLegalMoves(board.getPlayer())
+		legalMoves = board.calculateLegalMoves(self.player)
 		boards = []
 
 		for move in legalMoves:
-			boards.append(board.copy().move(move))
+            for index in range(len(validMove)):
+                if move[0] == validMove[index][0]:
+                    anchor.append(index)
+            board = board.copy()
+            board.calculateFlipSquares(legalMoves, anchor, board.getPlayer())
+            boards.append(board)
 
 		if depth == 0 or legalMoves == []:
-			return board.evaluateBoard()
+		    return board.evaluateBoard()
 
 		if maximizingPlayer:
 			value = -float("inf")
@@ -55,4 +60,8 @@ class Bot:
 				if alpha >= beta:
 					break
 
+<<<<<<< HEAD
+			return value
+=======
 			return [value,maxBoard,maxChoice]		
+>>>>>>> a8933a3381f1fddf606795e7af9c9c883053f613
