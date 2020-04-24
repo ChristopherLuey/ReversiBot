@@ -12,6 +12,7 @@ class Board:
         self.boardState = boardState
         self.turn = turn
         self.player = player
+        self.playerLegacy = player
 
         # Define Constants and Other Non-linear functions
         self.stableDiskWeight = 0.0
@@ -47,6 +48,8 @@ class Board:
         self.opponentPotentialFlips = 0
         self.opponentNumberOfTiles = 0
 
+        self.weightAdjustmentBias = 0.0
+
         # self.stableDiskCountMaximium = self.calculatePossibleStableDisks()
         # self.interiorDiskCountMaximium = self.calculatePossibleInteriorDisks()
         # self.frontierDiskCountMaximium = self.calculatePossibleFrontierDisks()
@@ -61,17 +64,39 @@ class Board:
     def evaluateBoard(self):
         # val is if the board is good or not
 
+        self.stableDiskCount = self.calculateStableDiskCount(self.player)
+        self.interiorDiskCount = self.calculateInteriorDiskCount(self.player)
+        self.frontierDiskCount = self.calculateFrontierDiskCount(self.player)
+        self.potentialMobility = self.calculateMobility(self.player)
+        self.potentialFlips = self.calculateFlipTilesPotential(self.player)
+        self.numberOfTiles = self.calculateNumberOfTiles(self.player)
+
+        self.opponentStableDiskCount = self.calculateStableDiskCount(1-self.player)
+        self.opponentInteriorDiskCount = self.calculateInteriorDiskCount(1-self.player)
+        self.opponentFrontierDiskCount = self.calculateFrontierDiskCount(1-self.player)
+        self.opponentPotentialMobility = self.calculateMobility(1-self.player)
+        self.opponentPotentialFlips = self.calculateFlipTilesPotential(1-self.player)
+        self.opponentNumberOfTiles = self.calculateNumberOfTiles(1-self.player)
 
         utility = self.utilityScore(self.stableDiskWeight, self.stableDiskCount) + \
                   self.utilityScore(self.interiorDiskWeight, self.interiorDiskCount) + \
                   self.utilityScore(self.frontierDiskWeight, self.frontierDiskCount) + \
                   self.utilityScore(self.opponentPotentialFlipsWeight, self.opponentPotentialFlips)
-        return utility
 
-    def copy(self, boardState):
+
+
+        if self.playerLegacy == self.player: return utility
+        else: return -utility
+
+    def copy(self):
         # Make a copy after changing to board state
-        b = Board(boardState, self.turn, self.player)
+        boardState = self.boardState.deepcopy()
+        b = Board(boardState, self.turn, 1-self.player)
         return copy.deepcopy(b)
+
+
+    def move(self, move):
+
 
     def getPlayer(self):
         return self.player
@@ -133,6 +158,9 @@ class Board:
                                 xFactor, yFactor = xFactor + factorList[k][0], yFactor + factorList[k][1]
         return self.legalMoves
 
+    def setPlayer(self, player):
+        self.playerLegacy = player
+
     def calculateFlipSquares(self, legalMoves, anchor, player):
         numberOfFlips, flipedSquares = 0, []
         for k in anchor:
@@ -167,8 +195,27 @@ class Board:
                     score[0] = score[0] + 1
         return score
 
-    def caluateNumberOfTiles(self, player):
+    def calculateNumberOfTiles(self, player):
         return self.calculateScore()[player]
+
+    def calculateFlipTilesPotential(self, player):
+        legalMoves = self.calculateLegalMoves(player)
+        anchor = list(range(len(legalMoves)))
+        numberOfFlips, flipedSquares = 0, []
+        for k in anchor:
+            dx, dy = legalMoves[k][0][0] - legalMoves[k][1][0], legalMoves[k][0][1] - legalMoves[k][1][1]
+            for i in range(1, max(abs(dx), abs(dy))):
+                try:
+                    dirx = int(dx / abs(dx))
+                except:
+                    dirx = 0
+                try:
+                    diry = int(dy / abs(dy))
+                except:
+                    diry = 0
+                flipedSquares.append([legalMoves[k][1][0] + i * dirx, legalMoves[k][1][1] + i * diry])
+                numberOfFlips+=1
+        return numberOfFlips, flipedSquares
 
     def calculateMobility(self, player):
         return len(self.calculateLegalMoves(player))
@@ -230,9 +277,6 @@ class Board:
         self.potentialMovesWeightBase = float
 
 
-
-    def calculateOpponentPotentialMovesCount(self):
-        return len(self.calculateLegalMoves(1-player))
 
 
 

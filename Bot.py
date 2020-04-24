@@ -9,51 +9,24 @@ from Board import *
 
 class Bot:
 
-<<<<<<< HEAD
-    def __init__(self, player, boardState, turn):
-        self.player = player
-        self.board = Board(boardState, turn, player)
-
-	# def alphabeta(node, depth, α, β, maximizingPlayer) is
-	#     if depth = 0 or node is a terminal node then
-    #           if maximizingPlayer:
-    #                b = Board(boardstate, turn, player)
-    #                utility = b.evaluateBoard()
-    #           else:
-    #                b = Board(boardstate, turn, 1-player)
-    #                utility = -b.evaluateBoard()
-
-	#         return the heuristic value of node
-	#     if maximizingPlayer then
-	#         value := −∞
-	#         for each child of node do
-	#             value := max(value, alphabeta(child, depth − 1, α, β, FALSE))
-	#             α := max(α, value)
-	#             if α ≥ β then
-	#                 break (* β cut-off *)
-	#         return value
-	#     else
-	#         value := +∞
-	#         for each child of node do
-	#             value := min(value, alphabeta(child, depth − 1, α, β, TRUE))
-	#             β := min(β, value)
-	#             if α ≥ β then
-	#                 break (* α cut-off *)
-	#         return value
-=======
 	def __init__(self, player, boardState, turn):
 		self.player = player
 		self.board = Board(boardState, turn, player)
 
 	def alphabeta(board, depth, alpha, beta, maximizingPlayer):
-		legalMoves = board.calculateLegalMoves(board.getPlayer())
+		legalMoves = board.calculateLegalMoves(self.player)
 		boards = []
 
 		for move in legalMoves:
-			boards.append(board.copy().move(move))
+            for index in range(len(validMove)):
+                if move[0] == validMove[index][0]:
+                    anchor.append(index)
+            board = board.copy()
+            board.calculateFlipSquares(legalMoves, anchor, board.getPlayer())
+            boards.append(board)
 
 		if depth == 0 or legalMoves == []:
-			return board.evaluateBoard()
+		    return board.evaluateBoard()
 
 		if maximizingPlayer:
 			value = -float("inf")
@@ -82,5 +55,4 @@ class Bot:
 				if alpha >= beta:
 					break
 
-			return value		
->>>>>>> 368bff5ba7a424ce3ec1971bb8089a69b76e8c66
+			return value
