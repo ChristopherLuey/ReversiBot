@@ -1,3 +1,8 @@
+# File: GUI.py
+# Written By: Kyler Rosen
+# Date: 4/28/20
+# GUI for Reversi
+
 from graphics import *
 from Button import *
 
@@ -16,7 +21,7 @@ class GUI:
         for i in range(1, 9):
             tempList = []
             for j in range(1, 9):
-                tempList.append(TileGUI(i, j, self.win))
+                tempList.append(Tile(i, j, self.win))
             self.tiles.append(tempList)
 
         # buttons and text
@@ -115,7 +120,7 @@ class GUI:
                 return anchor
 
 
-class TileGUI:
+class Tile:
     def __init__(self, xCoord, yCoord, win):
         self.Tile = Rectangle(Point(xCoord - 0.49, yCoord - 0.49), Point(xCoord + 0.49, yCoord + 0.49))
 
