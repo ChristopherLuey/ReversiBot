@@ -10,10 +10,16 @@ def main():
     player = startGame(bArr, b)
 
     while True:
-        if player == "black":
-            print("lmao")
+        if player == 0:
+            validMoves, centerData = calculateValidMoves(bArr, 0)
+            if not validMoves: b.setMessage("There are no valid moves. The bot will now play.")
+            else:
+                playedSquare = b.highlightSquares(validMoves)
+                bArr[playedSquare[0]][playedSquare[1]].setOccupied(["black", "white"][player])
+                calculateFlipSquares(playedSquare, centerData)
 
-        elif player == "white":
+
+        else:
             print("lmao")
 
 
@@ -25,17 +31,9 @@ def startGame(bArr, b):
     bArr[4][3].setOccupied("black")
     bArr[3][4].setOccupied("black")
 
-    b.setMessage("Hello there my name is Kyler and I really like to mess things up because this is fun but right now I need a really long message to make sure that the text box works as expected. ily")
-
-    pt = Point(-1,-1)
-
-    while True:
-    	pt = b.getClick()
-    	bArr[pt[0]][pt[1]].highlight()
-
 
 def calculateValidMoves(bArr, player):
-    validMoves = []
+    validMoves, centerData = [], []
     for row in bArr:
         for col in bArr[0]:
             adjacentSquares = []
@@ -50,13 +48,22 @@ def calculateValidMoves(bArr, player):
                     if isWithinBoard(row+k, col, bArr) == ["black", "white"][1-player]: adjacentSquares.append(True)
                     else: adjacentSquares.append(False)
 
-                xFactor, yFactor = 0,0
+                factorList = 0, 0, [[-1,-1], [1,1], [0,-1], [0,1], [-1,0], [1,0]]
                 for k in range(8):
                     if adjacentSquares[k] == True:
-                        while (0<=xFactor+row<=8) and (0<=yFactor+col<=8) and bArr[xFactor+row][yFactor+col].getOccupied() == ["black", "white"][1-player]
-                            
+                        xFactor, yFactor = factorList[k][0], factorList[k][1]
+                        while (0<=xFactor+row<=8) and (0<=yFactor+col<=8) and bArr[xFactor+row][yFactor+col].getOccupied() == ["black", "white"][1-player]:
+                            try:
+                                if bArr[row+xFactor+factorList[k][0]][col+yFactor+factorList[k][1]].getOccupied() == "":
+                                    validMoves.append([row+xFactor+factorList[k][0], col+yFactor+factorList[k][1]])
+                                    centerData.append(row, col)
+                            except: break
+                            xFactor, yFactor = xFactor+factorList[k][0], yFactor+factorList[k][1]
+    return validMoves, centerData
 
 
+def calculateFlipSquares(bArr, square):
+    for
 
 
 def isWithinBoard(r, c, b):

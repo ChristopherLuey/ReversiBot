@@ -39,14 +39,12 @@ class Board:
 		return self.tiles
 
 	def getTile(self,x,y):
-		return self.tiles[x][y].getOccupied()
+		return self.tiles[x][y]
 
 	def getClick(self):
 		pt = self.win.getMouse()
+		if self.quitButton.isClicked(pt): return [-1,-1]
 		return [round(pt.getX())-1,round(pt.getY())-1]
-
-	def quitButtonClicked(self,click):
-		return self.quitButton.isClicked(click)
 
 	def setMessage(self,message):
 	    #setText of message, modifies message and adds new lines if message is too long to fit width of box
@@ -93,11 +91,26 @@ class Board:
 		while True:
 			if b.isClicked(p):
 				win.close()
-				return 'black'
+				# 0: black
+				return 0
 			elif w.isClicked(p):
 				win.close()
-				return 'white'
+				# 1: white
+				return 1
 			p = win.getMouse()
+
+	def highlightSquares(self, validMove, centerData):
+		for i in validMove:
+			self.tiles[i[0]][i[1]].highlight()
+		while True:
+			click = self.getClick()
+			if click == [-1,-1]:
+				return [-1,-1]
+			for j in range(validMove):
+				if click == validMove[j]:
+					for k in validMove:
+						self.tiles[k[0]][k[1]].unhighlight()
+					return click, j
 
 
 class Tile:
@@ -123,11 +136,11 @@ class Tile:
 
 		self.piece.draw(win)
 
-	def highlight(self):
+	def unhighlight(self):
 		self.Tile.setOutline("yellow")
 		self.Tile.setFill("green")
 
-	def redHighlight(self):
+	def highlight(self):
 		self.Tile.setOutline("red")
 		self.Tile.setFill("green")
 
