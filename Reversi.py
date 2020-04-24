@@ -34,6 +34,8 @@ def main():
                 if not legalMoves:
                     bGUI.setMessage("There are no valid moves. The player will now play.")
                 else:
+
+                    # call (current state of board, depth, -float inf, float inf, true)
                     anchor = bGUI.highlightSquares(legalMoves)
                     if anchor != -1:
                         boardState[legalMoves[anchor[0]][0][0]][legalMoves[anchor[0]][0][1]].setOccupied(
@@ -42,8 +44,11 @@ def main():
                     else:
                         playing = False
                         break
-            calculateScore(board, score)
+            board.calculateScore(score)
+            board.incrementTurns()
             print(score)
+
+
 
             legalMoves.clear()
             turn+=1
@@ -55,17 +60,6 @@ def startGame(boardState, bGUI):
     boardState[4][3].setOccupied("black")
     boardState[3][4].setOccupied("black")
     return bGUI.startGame()
-
-
-def calculateScore(board, score):
-    boardState = board.getBoardState()
-    score.clear()
-    score.append(0)
-    score.append(0)
-    for i in range(len(boardState)):
-        for j in range(len(boardState[0])):
-            if boardState[i][j].getOccupied() == "white": score[1] = score[1]+1
-            elif boardState[i][j].getOccupied() == "black": score[0] = score[0]+1
 
 
 main()

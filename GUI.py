@@ -6,7 +6,6 @@
 from graphics import *
 from Button import *
 
-
 class GUI:
     def __init__(self):
 

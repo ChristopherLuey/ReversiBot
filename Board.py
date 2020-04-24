@@ -58,7 +58,7 @@ class Board:
         # Stable disks: cannot flip
         # Frontier vs interior disks: maximize interior disks
 
-    def evaluateBoard(self, boardState):
+    def evaluateBoard(self):
         # val is if the board is good or not
 
 
@@ -67,6 +67,17 @@ class Board:
                   self.utilityScore(self.frontierDiskWeight, self.frontierDiskCount) + \
                   self.utilityScore(self.opponentPotentialFlipsWeight, self.opponentPotentialFlips)
         return utility
+
+    def copy(self, boardState):
+        # Make a copy after changing to board state
+        b = Board(boardState, self.turn, self.player)
+        return copy.deepcopy(b)
+
+    def getPlayer(self):
+        return self.player
+
+    def incrementTurns(self):
+        self.turns+=1
 
     def utilityScore(self, weight, score):
         return weight*score
@@ -156,30 +167,61 @@ class Board:
                     score[0] = score[0] + 1
         return score
 
-    def calculatePotentialMovesCount(self):
-        return len(self.calculateLegalMoves(self.player))
+    def caluateNumberOfTiles(self, player):
+        return self.calculateScore()[player]
 
-    def calculateStableDiskCount(self):
+    def calculateMobility(self, player):
+        return len(self.calculateLegalMoves(player))
+
+    def calculateStableDiskCount(self, player):
         stableDisks = []
         # Stable disks cannot be calculated unless a piece has been placed in any of the corners
-        for i in [[0,0], [0,1], [1,0], [7,0],[6,0],[7,1],[7,7],[7,6],[6,7],[0,6],[0,7],[1,7]]:
+        for i in [[0, 0], [0, 1], [1, 0], [7, 0], [6, 0], [7, 1], [7, 7], [7, 6], [6, 7], [0, 6], [0, 7], [1, 7]]:
             if self.boardState[i[0]][i[1]].getOccupied() != "":
                 flag = True
                 break
         if flag:
             flipedSquares = []
 
-            opponentMoves = self.calculateLegalMoves(1-self.player)
+            opponentMoves = self.calculateLegalMoves(1-player)
             for i in range(opponentMoves):
-                numberOfFlips, flipedSquaresTemp = self.calculateFlipSquares(opponentMoves, i, 1-self.player)
+                numberOfFlips, flipedSquaresTemp = self.calculateFlipSquares(opponentMoves, i, 1 - player)
                 flipedSquares.append(flipedSquaresTemp)
             for i in range(8):
                 for j in range(8):
-                    if self.boardState[i][j].getOccupied(self.player) == ["black", "white"][self.player]:
-                        if [i,j] not in flipedSquares:
+                    if self.boardState[i][j].getOccupied(player) == ["black", "white"][player]:
+                        if [i, j] not in flipedSquares:
                             stableDisks.append([i, j])
 
         return len(stableDisks), stableDisks
+
+    def calculateFrontierDiskCount(self, player):
+        # More frontier disks means that you will probably lose
+        frontierDisk = []
+        for r in range(8):
+            for c in range(8):
+                if self.boardState[r][c].getOccupied() == ["black","white"][player]:
+                    for k in [[0,1],[0,-1],[1,0],[-1,0],[-1,1],[-1,-1],[1,1],[1,-1]]:
+                        row, col = r+k[0], c+k[1]
+                        if (0<=row<=8) and (0<=col<=8) and (self.boardState[row][col].getOccupied() == ""):
+                            frontierDisk.append([row, col])
+        return len(frontierDisk), frontierDisk
+
+    def calculateInteriorDiskCount(self, player):
+        # More interior disks means higher chance of winning
+        interiorDisk = []
+        for r in range(8):
+            for c in range(8):
+                if self.boardState[r][c].getOccupied() == ["black", "white"][player]:
+                    for k in [[0, 1], [0, -1], [1, 0], [-1, 0], [-1, 1], [-1, -1], [1, 1], [1, -1]]:
+                        row, col = r + k[0], c + k[1]
+                        if (0 <= row <= 8) and (0 <= col <= 8) and (self.boardState[row][col].getOccupied() == ["black", "white"][player]):
+                            interiorDisk.append([row, col])
+        return len(interiorDisk), interiorDisk
+
+
+
+
 
     def calculatePotentialMovesWeight(self, turn):
         return -math.log(turn + 1, self.potentialMovesWeightBase)
@@ -187,8 +229,12 @@ class Board:
     def adjustPotentialMovesWeightBase(self, float):
         self.potentialMovesWeightBase = float
 
+
+
     def calculateOpponentPotentialMovesCount(self):
         return len(self.calculateLegalMoves(1-player))
+
+
 
 
 class Matrix:
@@ -203,4 +249,3 @@ class Matrix:
         self.weightMatrix[row][col] = weight
 
     def evalutateBoard(self, legalMoves):
-        
