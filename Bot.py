@@ -30,29 +30,38 @@ class Bot:
 
 		if maximizingPlayer:
 			value = -float("inf")
+
 			for board in boards:
 				calcValue = alphabeta(child, depth − 1, alpha, beta,False)[0]
+
 				if calcValue > value:
 					value = calcValue
-					bestBoard = board
-					bestChoice = legalMoves[boards.index(board)]
+					maxBoard = board
+					maxChoice = legalMoves[boards.index(board)]
 
 				alpha = max(alpha, value)
 				if alpha >= beta:
 					break
-			return value
+					
+			return [value,maxBoard,maxChoice]
 
 		else:
 			value = float("inf")
+
 			for board in boards:
 				calcValue = alphabeta(child, depth − 1, alpha, beta,True)[0]
+
 			   	if calcValue < value:
 			   		value = calcValue
-			   		bestBoard = board
-			   		bestChoice = legalMoves[boards.index(board)]
+			   		maxBoard = board
+			   		maxChoice = legalMoves[boards.index(board)]
 
 				beta = min(beta, value)
 				if alpha >= beta:
 					break
 
+<<<<<<< HEAD
 			return value
+=======
+			return [value,maxBoard,maxChoice]		
+>>>>>>> a8933a3381f1fddf606795e7af9c9c883053f613
