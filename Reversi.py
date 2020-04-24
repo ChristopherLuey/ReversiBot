@@ -2,28 +2,28 @@
 # Written By: Chrisotpher Luey
 # Date: 04/21/20
 
-from Board import *
-from Bot import *
+from GUI import *
+from Weight import *
 
 def main():
-    b = Board()
+    b = GUI()
     boardState = b.getBoard()
     player = startGame(boardState, b)
     playing = True
     score = [0,0]
 
     while playing:
-        bot = Bot(1-player)
+        #bot = Bot(1-player)
         for i in range(2):
             b.setMessage("It is now " + ["black's", "white's"][i] + "turn.")
             if player == i:
                 legalMoves = calculateLegalMoves(boardState, player)
                 if not legalMoves: b.setMessage("There are no valid moves. The bot will now play.")
                 else:
-                    index = b.highlightSquares(legalMoves)
-                    if index != -1:
-                        boardState[legalMoves[index][0][0]][legalMoves[index][0][1]].setOccupied(["black", "white"][player])
-                        calculateFlipSquares(boardState, legalMoves, index, player, score)
+                    anchor = b.highlightSquares(legalMoves)
+                    if anchor != -1:
+                        boardState[legalMoves[anchor[0]][0][0]][legalMoves[anchor[0]][0][1]].setOccupied(["black", "white"][player])
+                        calculateFlipSquares(boardState, legalMoves, anchor, player, score)
                     else:
                         playing = False
                         break
@@ -35,14 +35,15 @@ def main():
                     # index = bot.play(boardState, legalMoves)
                     # boardState[legalMoves[index][0][0]][legalMoves[index][0][1]].setOccupied(["black", "white"][player])
                     # calculateFlipSquares(legalMoves, index)
-                    index = b.highlightSquares(legalMoves)
-                    if index != -1:
-                        boardState[legalMoves[index][0][0]][legalMoves[index][0][1]].setOccupied(
+                    anchor = b.highlightSquares(legalMoves)
+                    if anchor != -1:
+                        boardState[legalMoves[anchor[0]][0][0]][legalMoves[anchor[0]][0][1]].setOccupied(
                             ["black", "white"][1-player])
-                        calculateFlipSquares(boardState, legalMoves, index, 1-player, score)
+                        calculateFlipSquares(boardState, legalMoves, anchor, 1-player, score)
                     else:
                         playing = False
                         break
+            print(score)
 
 
             legalMoves.clear()
@@ -71,9 +72,12 @@ def calculateLegalMoves(boardState, player):
                 for k in [-1, 1]:
                     if isWithinBoard(row+k, col, boardState) == ["black", "white"][1-player]: adjacentSquares.append(True)
                     else: adjacentSquares.append(False)
+                for k in [-1, 1]:
+                    if isWithinBoard(row+k, col-k, boardState) == ["black", "white"][1-player]: adjacentSquares.append(True)
+                    else: adjacentSquares.append(False)
 
-                factorList = [[-1,-1], [1,1], [0,-1], [0,1], [-1,0], [1,0]]
-                for k in range(6):
+                factorList = [[-1,-1], [1,1], [0,-1], [0,1], [-1,0], [1,0], [-1, 1], [1, -1]]
+                for k in range(8):
                     if adjacentSquares[k] == True:
                         xFactor, yFactor = factorList[k][0], factorList[k][1]
                         while (1<=xFactor+row<=6) and (1<=yFactor+col<=6) and boardState[xFactor+row][yFactor+col].getOccupied() == ["black", "white"][1-player]:
@@ -82,19 +86,23 @@ def calculateLegalMoves(boardState, player):
                                     legalMoves.append([[row+xFactor+factorList[k][0], col+yFactor+factorList[k][1]], [row, col]])
                             except: break
                             xFactor, yFactor = xFactor+factorList[k][0], yFactor+factorList[k][1]
-    print(legalMoves)
+                print(adjacentSquares)
     return legalMoves
 
 
-def calculateFlipSquares(boardState, legalMoves, index, player, score):
-    dx, dy = legalMoves[index][0][0]-legalMoves[index][1][0], legalMoves[index][0][1]-legalMoves[index][1][1]
-    for i in range(1, max(abs(dx), abs(dy))):
-        try: dirx = int(dx/abs(dx))
-        except: dirx = 0
-        try: diry = int(dy/abs(dy))
-        except: diry = 0
-        boardState[legalMoves[index][1][0]+i*dirx][legalMoves[index][1][1]+i*diry].setOccupied(["black", "white"][player])
-        score[player] = score[player]+1
+def calculateFlipSquares(boardState, legalMoves, anchor, player, score):
+    count = 0
+    for k in anchor:
+        dx, dy = legalMoves[k][0][0]-legalMoves[k][1][0], legalMoves[k][0][1]-legalMoves[k][1][1]
+        for i in range(1, max(abs(dx), abs(dy))):
+            try: dirx = int(dx/abs(dx))
+            except: dirx = 0
+            try: diry = int(dy/abs(dy))
+            except: diry = 0
+            boardState[legalMoves[k][1][0]+i*dirx][legalMoves[k][1][1]+i*diry].setOccupied(["black", "white"][player])
+            score[player], count = score[player]+1, count+1
+
+    return count
 
 
 def isWithinBoard(r, c, boardState):
