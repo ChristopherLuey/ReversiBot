@@ -43,7 +43,7 @@ class Board:
         # val is if the board is good or not
         howGoodTheBoardIsBasedOnHowMuchWeWeightThings = 0
 
-        val = self.stableDiskWeight * self.stableDiskCount / self.stableDiskCountMaximium
+        utility = self.stableDiskWeight * self.stableDiskCount
         return howGoodTheBoardIsBasedOnHowMuchWeWeightThings
 
     def updateBoard(self, boardState):
@@ -133,10 +133,11 @@ class Board:
 
 
     def calculateStableDiskCount(self):
+        pass
         # Stable disks cannot be calculated unless a piece has been placed in any of the corners
-        for i in [[0,0], [0,1], [1,0], [7,0],[6,0],[7,1],[7,7],[7,6],[6,7],[0,6],[0,7],[1,7]]:
-            if self.boardState[i[0]][i[1]].getOccupied() != "":
-                
+        # for i in [[0,0], [0,1], [1,0], [7,0],[6,0],[7,1],[7,7],[7,6],[6,7],[0,6],[0,7],[1,7]]:
+        #     if self.boardState[i[0]][i[1]].getOccupied() != "":
+
 
 
 class Matrix:
