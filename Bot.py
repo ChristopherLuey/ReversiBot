@@ -1,7 +1,7 @@
 # File: Board.py
-# Written By: Christopher Luey
+# Written By: Kyler Rosen
 # Date: 4/28/20
-# Board class and Matrix class
+# Finds the most effective move
 
 from Board import *
 
@@ -37,7 +37,7 @@ class Bot:
 				alpha = max(alpha, value)
 				if alpha >= beta:
 					break
-					
+
 			return [value,maxBoard,maxChoice]
 
 		else:
