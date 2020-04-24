@@ -85,8 +85,8 @@ class Board:
         w.setTextColor("black")
         b.setActive()
         w.setActive()
-        p = win.getMouse()
 
+        p = win.getMouse()
         while True:
             if b.isClicked(p):
                 win.close()
@@ -100,15 +100,15 @@ class Board:
 
     def highlightSquares(self, validMove):
         for i in validMove:
-            self.tiles[i[0]][i[1]].highlight()
+            self.tiles[i[0][0]][i[0][1]].highlight()
 
         while True:
             click = self.getClick()
             if click == [-1, -1]: return -1
-            for index in range(validMove):
-                if click == validMove[index]:
+            for index in range(len(validMove)):
+                if click == validMove[index][0]:
                     for k in validMove:
-                        self.tiles[k[0]][k[1]].unhighlight()
+                        self.tiles[k[0][0]][k[0][1]].unhighlight()
                     return index
 
 
@@ -136,16 +136,17 @@ class Tile:
         self.piece.draw(win)
 
     def unhighlight(self):
-        self.Tile.setOutline("yellow")
-        self.Tile.setFill("green")
+        self.Tile.setOutline(self.color)
+        self.Tile.setFill("darkgreen")
 
     def highlight(self):
         self.Tile.setOutline("red")
         self.Tile.setFill("green")
 
-    def clear(self):
-        self.Tile.setOutline(self.color)
-        self.Tile.setFill("darkgreen")
+    def reset(self):
+        self.unhighlight()
+        self.setOccupied("")
+
 
     def isClicked(self, pt):
         return self.xCoord - 0.5 < pt.getX() < self.xCoord + 0.5 and self.yCoord - 0.5 < pt.getY() < self.yCoord + 0.5
