@@ -12,10 +12,11 @@ def main():
     player = startGame(boardState, bGUI)
     playing = True
     score = [0,0]
+    turn = 0
     while playing:
-        board = Board(boardState)
         #bot = Bot(1-player)
         for i in range(2):
+            board = Board(boardState, turn, i)
             bGUI.setMessage("It is now " + ["black's", "white's"][i] + "turn.")
             if player == i:
                 legalMoves = board.calculateLegalMoves(player)
@@ -45,6 +46,7 @@ def main():
             print(score)
 
             legalMoves.clear()
+            turn+=1
 
 
 def startGame(boardState, bGUI):
