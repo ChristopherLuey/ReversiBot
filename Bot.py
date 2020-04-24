@@ -42,7 +42,7 @@ class Bot:
 				alpha = max(alpha, value)
 				if alpha >= beta:
 					break
-					
+
 			return [value,maxBoard,maxChoice]
 
 		else:
@@ -60,8 +60,4 @@ class Bot:
 				if alpha >= beta:
 					break
 
-<<<<<<< HEAD
-			return value
-=======
-			return [value,maxBoard,maxChoice]		
->>>>>>> a8933a3381f1fddf606795e7af9c9c883053f613
+			return [value,maxBoard,maxChoice]

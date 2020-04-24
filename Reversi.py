@@ -46,7 +46,8 @@ def main():
                     else:
                         playing = False
                         break
-            board.calculateScore(score)
+
+            board.calculateScore()
             board.incrementTurns()
             print(score)
 

@@ -25,13 +25,7 @@ class Board:
         # Overtime potential moves becomes less valuable
         self.potentialMovesWeightBase = 2.0
         self.potentialMovesWeight = self.calculatePotentialMovesWeight(self.turn)
-
-        self.opponentPotentialMovesWeight = -0.0
-        self.opponentPotentialFlipsWeight = -0.0
-        self.opponentStableDisksWeight = -0.0
-        self.opponentFrontierDiskWeight = -0.0
-        self.opponentInteriorDiskWeight = -0.0
-        self.opponentFilpWeight = -0.0
+        self.numberOfTilesWeight = 0.0
 
         #
         self.stableDiskCount = 0
@@ -78,12 +72,21 @@ class Board:
         self.opponentPotentialFlips = self.calculateFlipTilesPotential(1-self.player)
         self.opponentNumberOfTiles = self.calculateNumberOfTiles(1-self.player)
 
-        utility = self.utilityScore(self.stableDiskWeight, self.stableDiskCount) + \
-                  self.utilityScore(self.interiorDiskWeight, self.interiorDiskCount) + \
-                  self.utilityScore(self.frontierDiskWeight, self.frontierDiskCount) + \
-                  self.utilityScore(self.opponentPotentialFlipsWeight, self.opponentPotentialFlips)
+        self.stableDiskScore = self.stableDiskWeight*(self.stableDiskCount-self.opponentStableDiskCount)/(self.stableDiskCount+self.opponentStableDiskCount)
 
+        self.interiorDiskScore = self.interiorDiskWeight*(self.interiorDiskCount-self.opponentInteriorDiskCount)/(self.interiorDiskCount+self.opponentInteriorDiskCount)
 
+        self.frontierDiskScore = self.frontierDiskWeight*(self.frontierDiskCount-self.opponentFrontierDiskCount)/(self.frontierDiskCount+self.opponentFrontierDiskCount)
+
+        self.pontentialMobilityScore = self.potentialMovesWeight*(self.potentialMobility-self.opponentPotentialMobility)/(self.potentialMobility+self.opponentPotentialMobility)
+
+        self.potentialFlipsScore = self.flipWeight*(self.potentialFlips-self.opponentPotentialFlips)/(self.potentialFlips+self.opponentPotentialFlips)
+
+        self.numberOfTilesScore = self.numberOfTilesWeight*(self.numberOfTiles-self.opponentNumberOfTiles)/(self.numberOfTiles+self.opponentNumberOfTiles)
+
+        matrixScore, opponentMatrixScore = self.weightMatrix.calculateMatrx(self.boardState)
+
+        utility = self.stableDiskScore + self.interiorDiskScore + self.frontierDiskScore + pontentialMobilityScore + potentialFlipsScore + numberOfTilesScore + matrixScore-opponentMatrixScore
 
         if self.playerLegacy == self.player: return utility
         else: return -utility
@@ -95,14 +98,11 @@ class Board:
         return copy.deepcopy(b)
 
 
-    def move(self, move):
-
-
     def getPlayer(self):
         return self.player
 
     def incrementTurns(self):
-        self.turns+=1
+        self.turn+=1
 
     def utilityScore(self, weight, score):
         return weight*score
@@ -254,6 +254,7 @@ class Board:
                             frontierDisk.append([row, col])
         return len(frontierDisk), frontierDisk
 
+
     def calculateInteriorDiskCount(self, player):
         # More interior disks means higher chance of winning
         interiorDisk = []
@@ -267,29 +268,37 @@ class Board:
         return len(interiorDisk), interiorDisk
 
 
-
-
-
     def calculatePotentialMovesWeight(self, turn):
         return -math.log(turn + 1, self.potentialMovesWeightBase)
+
 
     def adjustPotentialMovesWeightBase(self, float):
         self.potentialMovesWeightBase = float
 
 
-
-
-
-
 class Matrix:
     def __init__(self):
-        self.matrix = []
-        for i in range(8):
-            self.matrix.append([])
-            for j in range(8):
-                self.matrix[i].append(0.0)
+        self.matrix = [[0.9, -0.9, 0.3, 0.5, 0.5, 0.3, -0.9, 0.9],
+                        [-0.9, -0.9, 0.3, 0.5, 0.5, 0.3, -0.9, -0.9],
+                        [0.3, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.3],
+                        [0.5, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.5],
+                        [0.5, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.5],
+                        [0.3, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.3],
+                        [-0.9, -0.9, 0.3, 0.5, 0.5, 0.3, -0.9, -0.9],
+                        [0.9, -0.9, 0.3, 0.5, 0.5, 0.3, -0.9, 0.9]]
+        # for i in range(8):
+        #     self.matrix.append([])
+        #     for j in range(8):
+        #         self.matrix[i].append(0.0)
+    def calculateMatrix(self, boardState, player):
+        p1, p2 = 0.0,0.0
+        for i in range(boardState):
+            for j in range(boardState[0]):
+                if boardState[i][j].getOccupied() == ["black", "white"][player]:
+                    p1+=self.matrix[i][j]
+                elif boardState[i][j].getOccupied() == ["white", "black"][player]:
+                    p2+=self.matrix[i][j]
+        return p1, p2
 
     def adjustWeight(self, row, col, weight):
         self.weightMatrix[row][col] = weight
-
-    def evalutateBoard(self, legalMoves):
