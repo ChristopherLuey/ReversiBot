@@ -323,14 +323,15 @@ class Matrix:
         #     for j in range(8):
         #         self.matrix[i].append(0.0)
     def calculateMatrix(self, boardState, player):
-        p1, p2 = 0.0,0.0
+        p1, p2, total = 0.0,0.0, 0.0
         for i in range(len(boardState)):
             for j in range(len(boardState[0])):
                 if boardState[i][j] == ["black", "white"][player]:
                     p1+=self.matrix[i][j]
                 elif boardState[i][j] == ["white", "black"][player]:
                     p2+=self.matrix[i][j]
-        return p1, p2
+                total+=self.matrix[i][j]
+        return p1/total, p2/total
 
     def adjustWeight(self, row, col, weight):
         self.weightMatrix[row][col] = weight
