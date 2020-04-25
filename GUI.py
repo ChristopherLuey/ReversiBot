@@ -30,7 +30,7 @@ class GUI:
             self.tilesDraw.append(tempListTilesDraw)
 
         # buttons and text
-        self.quitButton = Button(Point(13.5, 1), 0.5, 1, "QUIT")
+        self.quitButton = Button(Point(13.5, 0.75), 0.5, 1, "QUIT")
         self.quitButton.setColor("red", "maroon")
         self.quitButton.setActive()
         self.quitButton.draw(self.win)
@@ -81,7 +81,7 @@ class GUI:
         self.updateScoreboard()
 
     def updateScoreboard(self):
-        self.scoreboard.setText(("White Score: "+str(self.whiteScore)).ljust(10)+"\n"+("Black Score: "+str(self.blackScore)).ljust(10))
+        self.scoreboard.setText(("White Score: "+str(self.whiteScore)).ljust(15)+"\n"+("Black Score: "+str(self.blackScore)).ljust(15))
 
 
     def getBoard(self):
@@ -183,10 +183,18 @@ class GUI:
 
 
     def draw(self, boardState):
+        self.whiteScore,self.blackScore = 0,0
         for i in range(8):
             for j in range(8):
                 if not boardState[i][j] == "":
                     self.tilesDraw[i][j].drawPiece(boardState[i][j])
+                    if boardState[i][j] == "black":
+                        self.blackScore += 1
+
+                    elif boardState[i][j] == "white":
+                        self.whiteScore += 1
+
+        self.updateScoreboard()
 
     def reset(self):
         # win = GraphWin("Play Again", 500, 200)
