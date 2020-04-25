@@ -94,7 +94,7 @@ class GUI:
         self.message.append(message)
         self.lineCount +=2
         
-        while lineCount <=20:
+        while self.lineCount <=20:
             extraLines = self.message[0].count("\n")
             self.lineCount -= extraLines + 2
             self.message.pop(0)
