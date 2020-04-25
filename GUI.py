@@ -30,7 +30,7 @@ class GUI:
             self.tilesDraw.append(tempListTilesDraw)
 
         # buttons and text
-        self.quitButton = Button(Point(13, 1), 0.5, 1, "QUIT")
+        self.quitButton = Button(Point(13.5, 1), 0.5, 1, "QUIT")
         self.quitButton.setColor("red", "maroon")
         self.quitButton.setActive()
         self.quitButton.draw(self.win)
@@ -55,13 +55,28 @@ class GUI:
         self.text2.setFace("courier")
         self.text2.draw(self.win)
 
+        self.textBackground3 = Rectangle(Point(10, 0.5), Point(12, 1.25))
+        self.textBackground3.setFill("lightgrey")
+        self.textBackground3.setOutline("lightgrey")
+        self.textBackground3.draw(self.win)
+
+        self.scoreboard = Text(Point(11, 0.875), "")
+        self.scoreboard.setSize(16)
+        self.scoreboard.setFace("courier")
+        self.scoreboard.draw(self.win)
+
         self.message = []
 
         self.lineCount = 0
 
-        for i in range(20):
+
+        for i in range(18):
             self.message.append("")
             self.lineCount += 2
+
+
+        self.blackScore = 0
+        self.whiteScore = 0
 
 
 
@@ -94,7 +109,7 @@ class GUI:
         self.message.append(message)
         self.lineCount +=2
         
-        while self.lineCount >=40:
+        while self.lineCount >=36:
             extraLines = self.message[0].count("\n")
             self.lineCount -= extraLines + 2
             self.message.pop(0)
