@@ -59,7 +59,7 @@ class GUI:
 
         self.lineCount = 0
 
-        for i in range(10):
+        for i in range(20):
             self.message.append("")
             self.lineCount += 2
 
@@ -94,7 +94,7 @@ class GUI:
         self.message.append(message)
         self.lineCount +=2
         
-        while self.lineCount <=20:
+        while self.lineCount >=40:
             extraLines = self.message[0].count("\n")
             self.lineCount -= extraLines + 2
             self.message.pop(0)
