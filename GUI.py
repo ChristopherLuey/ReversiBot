@@ -55,6 +55,14 @@ class GUI:
         self.text2.setFace("courier")
         self.text2.draw(self.win)
 
+        self.message = []
+
+        self.lineCount = 0
+
+        for i in range(10):
+            self.message.append("")
+            self.lineCount += 2
+
 
 
     def getBoard(self):
@@ -79,9 +87,19 @@ class GUI:
                 if lineChrCount > 30:
                     message = message + "\n" + word + " "
                     lineChrCount = len(word)
+                    self.lineCount +=1
                 else:
                     message = message + word + " "
-        self.text.setText(message)
+
+        self.message.append(message)
+        self.lineCount +=2
+        
+        while lineCount <=20:
+            extraLines = self.message[0].count("\n")
+            self.lineCount -= extraLines + 2
+            self.message.pop(0)
+
+        self.text.setText("\n\n".join(self.message))
 
     def setMessage2(self, message):
         self.text2.setText(message)
