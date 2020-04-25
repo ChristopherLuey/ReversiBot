@@ -78,8 +78,10 @@ class GUI:
         self.blackScore = 0
         self.whiteScore = 0
 
+        self.updateScoreboard()
+
     def updateScoreboard(self):
-        self.scoreboard.setMessage(("White Score: "+str(self.whiteScore)).ljust(10)+"\n"+("Black Score: "+str(self.blackScore)).ljust(10))
+        self.scoreboard.setText(("White Score: "+str(self.whiteScore)).ljust(10)+"\n"+("Black Score: "+str(self.blackScore)).ljust(10))
 
 
     def getBoard(self):
