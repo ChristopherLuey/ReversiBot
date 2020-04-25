@@ -66,7 +66,7 @@ def main():
 
                         b = Board(copy.deepcopy(boardState), turn, 1-i)
                         bGUI.highlightSquares(legalMoves, False)
-                        decision, board2, choice = bot.alphabeta(b, 2, -float("inf"), float("inf"), True)
+                        decision, board2, choice = bot.alphabeta(b, 3, -float("inf"), float("inf"), True)
                         anchor = []
                         for index in range(len(legalMoves)):
                             if choice == legalMoves[index][0]:
