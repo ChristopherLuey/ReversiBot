@@ -25,7 +25,6 @@ def main():
                 bGUI.setMessage("It is now " + ["black's", "white's"][i] + "turn.")
                 if player == i:
                     legalMoves = board.calculateLegalMoves(player)
-                    print(legalMoves)
 
                     if not legalMoves:
                         bGUI.setMessage("There are no valid moves. The bot will now play.")
@@ -41,23 +40,19 @@ def main():
                             break
                 else:
                     legalMoves = board.calculateLegalMoves(1-player)
-                    print(legalMoves)
                     if not legalMoves:
                         bGUI.setMessage("There are no valid moves. The player will now play.")
 
                     else:
 
                         # call (current state of board, depth, -float inf, float inf, true)
-                        tempboard = boardState[:]
 
                         bot = Bot(1 - player)
 
-                        b = Board(tempboard, turn, i)
+                        b = Board(copy.deepcopy(boardState), turn, i)
 
-                        decision, board2, choice = bot.alphabeta(b, 1, -float("inf"), float("inf"), True)
+                        decision, board2, choice = bot.alphabeta(b, 5, -float("inf"), float("inf"), True)
 
-                        b.printBoard()
-                        board.printBoard()
                         anchor = []
                         for index in range(len(legalMoves)):
                             if choice == legalMoves[index][0]:
@@ -67,8 +62,6 @@ def main():
                         bGUI.highlightSquares(legalMoves, False)
                         bGUI.draw(boardState)
                         bGUI.setMessage("AI has played " + str(choice[0]+1) + ", " + str(choice[1]+1))
-
-
 
                 board.calculateScore()
                 board.incrementTurns()

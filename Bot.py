@@ -19,7 +19,6 @@ class Bot:
         else:
             player = self.player
         legalMoves = board.calculateLegalMoves(player)
-        print(legalMoves)
         boards = []
         tempboard = copy.deepcopy(board.getBoard())
         for move in legalMoves:
@@ -28,14 +27,16 @@ class Bot:
                 if move[0] == legalMoves[index][0]:
                     anchor.append(index)
 
-            boardtemp = Board(tempboard, board.getTurn(), player)
+            boardtemp = Board(copy.deepcopy(tempboard), board.getTurn(), player)
             boardtemp.setPlayer(board.getPlayerLegacy())
-            boardtemp.move(copy.deepcopy(legalMoves), anchor, boardtemp.getPlayer())
+            boardtemp.move(copy.deepcopy(legalMoves), copy.deepcopy(anchor), boardtemp.getPlayer())
             boardtemp.calculateFlipSquares(copy.deepcopy(legalMoves), copy.deepcopy(anchor), player)
             boards.append(boardtemp)
 
         if depth == 0 or legalMoves == []:
             eval = board.evaluateBoard()
+            board.printBoard()
+            print(eval)
             return eval, board, [0,0]
 
         if maximizingPlayer:
