@@ -4,37 +4,49 @@
 # Finds the most effective move
 
 from Board import *
+import copy
 
 #https://en.wikipedia.org/wiki/Alpha–beta_pruning
 
 class Bot:
-    def __init__(self, player, boardState, turn):
+    def __init__(self, player):
         self.player = player
-        self.board = Board(boardState, turn, player)
-        self.maxBoard, self.maxChoice = self.board, [-1,-1]
 
 
     def alphabeta(self, board, depth, alpha, beta, maximizingPlayer):
-        legalMoves = board.calculateLegalMoves(self.player)
+        if not maximizingPlayer:
+            player = 1-self.player
+        else:
+            player = self.player
+        legalMoves = board.calculateLegalMoves(player)
+        print(legalMoves)
         boards = []
+        tempboard = copy.deepcopy(board.getBoard())
         for move in legalMoves:
             anchor = []
             for index in range(len(legalMoves)):
                 if move[0] == legalMoves[index][0]:
                     anchor.append(index)
-            boardtemp = board.copy()
-            boardtemp.calculateFlipSquares(legalMoves, anchor, boardtemp.getPlayer())
+
+            boardtemp = Board(tempboard, board.getTurn(), player)
+            boardtemp.setPlayer(board.getPlayerLegacy())
+            boardtemp.move(copy.deepcopy(legalMoves), anchor, boardtemp.getPlayer())
+            boardtemp.calculateFlipSquares(copy.deepcopy(legalMoves), copy.deepcopy(anchor), player)
             boards.append(boardtemp)
+            boardtemp.printBoard()
+
+        print(boards)
+
+        # for i in boards:
+        #     i.printBoard()
 
         if depth == 0 or legalMoves == []:
             eval = board.evaluateBoard()
-            print(eval)
             return eval, board, [0,0]
 
         if maximizingPlayer:
             value = -float("inf")
 
-<<<<<<< HEAD
             for boardVar in boards:
                 calcValue, l, m = self.alphabeta(boardVar, depth - 1, alpha, beta,False)
 
@@ -65,53 +77,3 @@ class Bot:
                     break
 
             return value, maxBoard, maxChoice
-=======
-		for move in legalMoves:
-            for index in range(len(validMove)):
-                if move[0] == validMove[index][0]:
-                    anchor.append(index)
-            board = board.copy()
-            board.calculateFlipSquares(legalMoves, anchor, board.getPlayer())
-            boards.append(board)
-
-		if depth == 0 or legalMoves == []:
-		    return board.evaluateBoard()
-
-		if maximizingPlayer:
-			value = -float("inf")
-
-			for board in boards:
-				calcValue = alphabeta(child, depth − 1, alpha, beta,False)[0]
-
-				if calcValue > value:
-					value = calcValue
-					maxBoard = board
-					maxChoice = legalMoves[boards.index(board)]
-
-				alpha = max(alpha, value)
-				if alpha >= beta:
-					break
-
-			return [value,maxBoard,maxChoice]
-
-		else:
-			value = float("inf")
-
-			for board in boards:
-				calcValue = alphabeta(child, depth − 1, alpha, beta,True)[0]
-
-			   	if calcValue < value:
-			   		value = calcValue
-			   		maxBoard = board
-			   		maxChoice = legalMoves[boards.index(board)]
-
-				beta = min(beta, value)
-				if alpha >= beta:
-					break
-
-<<<<<<< HEAD
-			return value
-=======
-			return [value,maxBoard,maxChoice]		
->>>>>>> a8933a3381f1fddf606795e7af9c9c883053f613
->>>>>>> 609dc6aef68208f3a1523f8ff12b591af077dce9

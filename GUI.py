@@ -15,14 +15,18 @@ class GUI:
         self.win.setBackground("grey")
 
         self.tiles = []
+        self.tilesDraw = []
 
         # creates the board
         for i in range(1, 9):
             tempList = []
+            tempListTilesDraw = []
             for j in range(1, 9):
-                tempList.append(Tile(i, j))
-                tempList[j-1].draw(self.win)
+                tempList.append("")
+                tempListTilesDraw.append(Tile())
+                tempListTilesDraw[j-1].draw(self.win, i, j)
             self.tiles.append(tempList)
+            self.tilesDraw.append(tempListTilesDraw)
 
         # buttons and text
         self.quitButton = Button(Point(13, 1), 0.5, 1, "QUIT")
@@ -105,7 +109,7 @@ class GUI:
 
     def highlightSquares(self, validMove):
         for i in validMove:
-            self.tiles[i[0][0]][i[0][1]].highlight()
+            self.tilesDraw[i[0][0]][i[0][1]].highlight()
 
         while True:
             click = self.getClick()
@@ -116,17 +120,23 @@ class GUI:
                     anchor.append(index)
             if anchor:
                 for k in validMove:
-                    self.tiles[k[0][0]][k[0][1]].unhighlight()
+                    self.tilesDraw[k[0][0]][k[0][1]].unhighlight()
                 return anchor
+
+    def draw(self, boardState):
+        for i in range(8):
+            for j in range(8):
+                if not boardState[i][j] == "":
+                    self.tilesDraw[i][j].drawPiece(boardState[i][j])
 
 
 class Tile:
-    def __init__(self, xCoord, yCoord):
+    def __init__(self):
         self.occupied = ""
+
+
+    def draw(self, win, xCoord, yCoord):
         self.xCoord, self.yCoord = xCoord, yCoord
-
-
-    def draw(self, win):
         self.Tile = Rectangle(Point(self.xCoord - 0.49, self.yCoord - 0.49), Point(self.xCoord + 0.49, self.yCoord + 0.49))
         self.color = "black"
         self.fill = "darkgreen"

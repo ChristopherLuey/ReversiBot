@@ -5,7 +5,6 @@
 
 from GUI import Tile
 import math
-import copy
 
 class Board:
     def __init__(self, boardState, turn, player):
@@ -50,6 +49,7 @@ class Board:
         # Corner, edges, buffer
         # Stable disks: cannot flip
         # Frontier vs interior disks: maximize interior disks
+        print(self.boardState)
 
     def evaluateBoard(self):
         # val is if the board is good or not
@@ -78,18 +78,27 @@ class Board:
         maxFlip = (self.potentialFlips+self.opponentPotentialFlips)
         if (self.potentialFlips+self.opponentPotentialFlips) == 0: maxFlip = 1
 
+        maxInterior = (self.interiorDiskCount+self.opponentInteriorDiskCount)
+        if (self.interiorDiskCount+self.opponentInteriorDiskCount) == 0: maxInterior = 1
+
+        maxFrontier = (self.frontierDiskCount+self.opponentFrontierDiskCount)
+        if (self.frontierDiskCount+self.opponentFrontierDiskCount) == 0: maxFrontier = 1
+
+        maxTiles = (self.numberOfTiles+self.opponentNumberOfTiles)
+        if (self.numberOfTiles+self.opponentNumberOfTiles) == 0: maxTiles = 1
+
 
         self.stableDiskScore = self.stableDiskWeight*(self.stableDiskCount-self.opponentStableDiskCount) / maxStableDisk
 
-        self.interiorDiskScore = self.interiorDiskWeight*(self.interiorDiskCount-self.opponentInteriorDiskCount)/(self.interiorDiskCount+self.opponentInteriorDiskCount)
+        self.interiorDiskScore = self.interiorDiskWeight*(self.interiorDiskCount-self.opponentInteriorDiskCount)/maxInterior
 
-        self.frontierDiskScore = self.frontierDiskWeight*(self.frontierDiskCount-self.opponentFrontierDiskCount)/(self.frontierDiskCount+self.opponentFrontierDiskCount)
+        self.frontierDiskScore = self.frontierDiskWeight*(self.frontierDiskCount-self.opponentFrontierDiskCount)/maxFrontier
 
         self.potentialMobilityScore = self.potentialMovesWeight*(self.potentialMobility-self.opponentPotentialMobility)/maxMobility
 
         self.potentialFlipsScore = self.flipWeight*(self.potentialFlips-self.opponentPotentialFlips)/maxFlip
 
-        self.numberOfTilesScore = self.numberOfTilesWeight*(self.numberOfTiles-self.opponentNumberOfTiles)/(self.numberOfTiles+self.opponentNumberOfTiles)
+        self.numberOfTilesScore = self.numberOfTilesWeight*(self.numberOfTiles-self.opponentNumberOfTiles)/maxTiles
 
         matrixScore, opponentMatrixScore = self.weightMatrix.calculateMatrix(self.boardState, self.player)
 
@@ -101,16 +110,16 @@ class Board:
 
     def copy(self):
         # Make a copy after changing to board state
-        boardState = []
-        for i in range(8):
-            boardState.append([])
-            for j in range(8):
-                boardState[i].append(self.boardState[i][j])
-
+        boardState = list(self.boardState.copy())
         b = Board(boardState, self.turn, 1-self.player)
         b.setPlayer(self.playerLegacy)
         return b
 
+    def getTurn(self):
+        return self.turn
+
+    def getPlayerLegacy(self):
+        return self.playerLegacy
 
     def getPlayer(self):
         return self.player
@@ -128,11 +137,11 @@ class Board:
         return self.boardState
 
     def calculateLegalMoves(self, player):
-        self.legalMoves = []
+        legalMoves = []
         for row in range(len(self.boardState)):
             for col in range(len(self.boardState[0])):
                 adjacentSquares = []
-                if self.boardState[row][col].getOccupied() == ["black", "white"][player]:
+                if self.boardState[row][col] == ["black", "white"][player]:
                     for k in [-1, 1]:
                         if self.isWithinBoard(row + k, col + k) == ["black", "white"][1 - player]:
                             adjacentSquares.append(True)
@@ -158,14 +167,14 @@ class Board:
                     for k in range(8):
                         if adjacentSquares[k] == True:
                             xFactor, yFactor = factorList[k][0], factorList[k][1]
-                            while (1 <= xFactor + row <= 6) and (1 <= yFactor + col <= 6) and self.boardState[xFactor + row][yFactor + col].getOccupied() == ["black", "white"][1 - player]:
+                            while (1 <= xFactor + row <= 6) and (1 <= yFactor + col <= 6) and self.boardState[xFactor + row][yFactor + col] == ["black", "white"][1 - player]:
                                 try:
-                                    if self.boardState[row + xFactor + factorList[k][0]][col + yFactor + factorList[k][1]].getOccupied() == "":
-                                        self.legalMoves.append([[row + xFactor + factorList[k][0], col + yFactor + factorList[k][1]], [row, col]])
+                                    if self.boardState[row + xFactor + factorList[k][0]][col + yFactor + factorList[k][1]] == "":
+                                        legalMoves.append([[row + xFactor + factorList[k][0], col + yFactor + factorList[k][1]], [row, col]])
                                 except:
                                     break
                                 xFactor, yFactor = xFactor + factorList[k][0], yFactor + factorList[k][1]
-        return self.legalMoves
+        return legalMoves
 
     def setPlayer(self, player):
         self.playerLegacy = player
@@ -183,14 +192,14 @@ class Board:
                     diry = int(dy / abs(dy))
                 except:
                     diry = 0
-                self.boardState[legalMoves[k][1][0] + i * dirx][legalMoves[k][1][1] + i * diry].setOccupied(["black", "white"][player])
+                self.boardState[legalMoves[k][1][0] + i * dirx][legalMoves[k][1][1] + i * diry] = ["black", "white"][player]
                 flipedSquares.append([legalMoves[k][1][0] + i * dirx, legalMoves[k][1][1] + i * diry])
                 numberOfFlips+=1
         return numberOfFlips, flipedSquares
 
     def isWithinBoard(self, r, c):
         try:
-            return self.boardState[r][c].getOccupied()
+            return self.boardState[r][c]
         except:
             return ""
 
@@ -198,9 +207,9 @@ class Board:
         score = [0,0]
         for i in range(len(self.boardState)):
             for j in range(len(self.boardState[0])):
-                if self.boardState[i][j].getOccupied() == "white":
+                if self.boardState[i][j] == "white":
                     score[1] = score[1] + 1
-                elif self.boardState[i][j].getOccupied() == "black":
+                elif self.boardState[i][j] == "black":
                     score[0] = score[0] + 1
         return score
 
@@ -234,19 +243,19 @@ class Board:
         # Stable disks cannot be calculated unless a piece has been placed in any of the corners
         flag = False
         for i in [[0, 0], [0, 1], [1, 0], [7, 0], [6, 0], [7, 1], [7, 7], [7, 6], [6, 7], [0, 6], [0, 7], [1, 7]]:
-            if self.boardState[i[0]][i[1]].getOccupied() != "":
+            if self.boardState[i[0]][i[1]] != "":
                 flag = True
                 break
         if flag:
             flipedSquares = []
 
             opponentMoves = self.calculateLegalMoves(1-player)
-            for i in range(opponentMoves):
-                numberOfFlips, flipedSquaresTemp = self.calculateFlipSquares(opponentMoves, i, 1-player)
+            for i in range(len(opponentMoves)):
+                numberOfFlips, flipedSquaresTemp = self.calculateFlipTilesPotential(1-player)
                 flipedSquares.append(flipedSquaresTemp)
             for i in range(8):
                 for j in range(8):
-                    if self.boardState[i][j].getOccupied(player) == ["black", "white"][player]:
+                    if self.boardState[i][j] == ["black", "white"][player]:
                         if [i, j] not in flipedSquares:
                             stableDisks.append([i, j])
 
@@ -257,11 +266,12 @@ class Board:
         frontierDisk = []
         for r in range(8):
             for c in range(8):
-                if self.boardState[r][c].getOccupied() == ["black","white"][player]:
+                if self.boardState[r][c] == ["black","white"][player]:
                     for k in [[0,1],[0,-1],[1,0],[-1,0],[-1,1],[-1,-1],[1,1],[1,-1]]:
                         row, col = r+k[0], c+k[1]
-                        if (0<=row<=8) and (0<=col<=8) and (self.boardState[row][col].getOccupied() == ""):
+                        if (1<=row<=6) and (1<=col<=6) and (self.boardState[row][col] == ""):
                             frontierDisk.append([row, col])
+                            break
         return len(frontierDisk), frontierDisk
 
 
@@ -270,11 +280,13 @@ class Board:
         interiorDisk = []
         for r in range(8):
             for c in range(8):
-                if self.boardState[r][c].getOccupied() == ["black", "white"][player]:
+                if self.boardState[r][c] == ["black", "white"][player]:
+                    flag = True
                     for k in [[0, 1], [0, -1], [1, 0], [-1, 0], [-1, 1], [-1, -1], [1, 1], [1, -1]]:
                         row, col = r + k[0], c + k[1]
-                        if (0 <= row <= 8) and (0 <= col <= 8) and (self.boardState[row][col].getOccupied() == ["black", "white"][player]):
-                            interiorDisk.append([row, col])
+                        if (1 <= row <= 6) and (1 <= col <= 6) and not (self.boardState[row][col] == ["black", "white"][player]):
+                            flag = False
+                    if flag: interiorDisk.append([row, col])
         return len(interiorDisk), interiorDisk
 
 
@@ -288,7 +300,26 @@ class Board:
     def draw(self):
         for i in range(8):
             for j in range(8):
-                self.boardState[i][j].drawPiece(self.boardState[i][j].getOccupied())
+                self.boardState[i][j].drawPiece(self.boardState[i][j])
+
+    def getBoard(self):
+        return self.boardState
+
+    def setBoard(self, boardState):
+        self.boardState = boardState
+
+    def printBoard(self):
+        for i in range(8):
+            for j in range(8):
+                if self.boardState[j][i] == "":
+                    print("xxxxx", end=" ")
+                else:
+                    print(self.boardState[j][i], end=" ")
+            print()
+        print()
+
+    def move(self, legalMoves, anchor, player):
+        self.boardState[legalMoves[anchor[0]][0][0]][legalMoves[anchor[0]][0][1]] = ["black", "white"][player]
 
 
 class Matrix:
@@ -309,9 +340,9 @@ class Matrix:
         p1, p2 = 0.0,0.0
         for i in range(len(boardState)):
             for j in range(len(boardState[0])):
-                if boardState[i][j].getOccupied() == ["black", "white"][player]:
+                if boardState[i][j] == ["black", "white"][player]:
                     p1+=self.matrix[i][j]
-                elif boardState[i][j].getOccupied() == ["white", "black"][player]:
+                elif boardState[i][j] == ["white", "black"][player]:
                     p2+=self.matrix[i][j]
         return p1, p2
 

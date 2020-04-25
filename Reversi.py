@@ -19,7 +19,7 @@ def main():
         board = Board(boardState, turn, 0)
         board.setPlayer(1 - player)
         game = True
-        while game:
+        while turn<64:
             for i in range(2):
                 board = Board(boardState, turn, i)
                 bGUI.setMessage("It is now " + ["black's", "white's"][i] + "turn.")
@@ -27,13 +27,14 @@ def main():
                     legalMoves = board.calculateLegalMoves(player)
                     print(legalMoves)
 
-                    if not legalMoves: bGUI.setMessage("There are no valid moves. The bot will now play.")
+                    if not legalMoves:
+                        bGUI.setMessage("There are no valid moves. The bot will now play.")
                     else:
                         anchor = bGUI.highlightSquares(legalMoves)
                         if anchor:
-                            boardState[legalMoves[anchor[0]][0][0]][legalMoves[anchor[0]][0][1]].setOccupied(["black", "white"][player])
+                            boardState[legalMoves[anchor[0]][0][0]][legalMoves[anchor[0]][0][1]] = ["black", "white"][player]
                             board.calculateFlipSquares(legalMoves, anchor, player)
-                            board.draw()
+                            bGUI.draw(boardState)
                         else:
                             playing = False
                             game = False
@@ -41,23 +42,32 @@ def main():
                 else:
                     legalMoves = board.calculateLegalMoves(1-player)
                     print(legalMoves)
-                    if not legalMoves:  bGUI.setMessage("There are no valid moves. The player will now play.")
+                    if not legalMoves:
+                        bGUI.setMessage("There are no valid moves. The player will now play.")
+
                     else:
 
                         # call (current state of board, depth, -float inf, float inf, true)
-                        bot = Bot(1 - player, boardState, turn)
-                        decision, b, choice = bot.alphabeta(Board(boardState, turn, i), 2, -float("inf"), float("inf"), True)
+                        tempboard = boardState[:]
 
-                        print(decision, b, choice)
+                        bot = Bot(1 - player)
 
+                        b = Board(tempboard, turn, i)
+
+                        decision, board2, choice = bot.alphabeta(b, 1, -float("inf"), float("inf"), True)
+
+                        print(decision, board2, choice)
+                        b.printBoard()
+                        board.printBoard()
                         anchor = []
                         for index in range(len(legalMoves)):
                             if choice == legalMoves[index][0]:
                                 anchor.append(index)
-
-                        boardState[legalMoves[anchor[0]][0][0]][legalMoves[anchor[0]][0][1]].setOccupied(["black", "white"][1-player])
+                        print(legalMoves, anchor)
+                        board.move(legalMoves, anchor, 1-player)
                         board.calculateFlipSquares(legalMoves, anchor, 1-player)
-                        board.draw()
+                        bGUI.draw(boardState)
+
 
 
                 board.calculateScore()
@@ -67,13 +77,11 @@ def main():
 
 
 def startGame(boardState, bGUI):
-    boardState[3][3].setOccupied("white")
-    boardState[4][4].setOccupied("white")
-    boardState[4][3].setOccupied("black")
-    boardState[3][4].setOccupied("black")
-    for i in range(8):
-        for j in range(8):
-            boardState[i][j].drawPiece(boardState[i][j].getOccupied())
+    boardState[3][3]= "white"
+    boardState[4][4] = "white"
+    boardState[4][3] = "black"
+    boardState[3][4] = "black"
+    bGUI.draw(boardState)
     return bGUI.startGame()
 
 
