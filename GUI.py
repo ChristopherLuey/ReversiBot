@@ -266,6 +266,8 @@ class GUI:
                 self.tiles[i][j] = ""
         return True
 
+        self.messageClear()
+
 
 
 class Tile:
