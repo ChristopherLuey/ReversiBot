@@ -5,9 +5,19 @@
 
 from Board import *
 import copy
-from Matrix import *
 
 #https://en.wikipedia.org/wiki/Alpha–beta_pruning
+def value(e):
+    matrix = [[0.9, -0.9, 0.3, 0.5, 0.5, 0.3, 0.3, 0.9],
+                    [0.3, 0.3, 0.3, 0.5, 0.5, 0.3, 0.3, 0.3],
+                    [0.3, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.3],
+                    [0.5, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.5],
+                    [0.5, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.5],
+                    [0.3, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.3],
+                    [0.3, 0.3, 0.3, 0.5, 0.5, 0.3, 0.3, 0.3],
+                    [0.9, 0.3, 0.3, 0.5, 0.5, 0.3, 0.3, 0.9]]
+
+    return matrix[e[0]][e[1]]
 
 class Bot:
     def __init__(self, player):
@@ -23,8 +33,7 @@ class Bot:
 
         legalMoves = board.calculateLegalMoves(player)
 
-        for moves in legalMoves:
-
+        legalMoves.sort(key = value)
 
         boards = []
         tempboard = copy.deepcopy(board.getBoard())
