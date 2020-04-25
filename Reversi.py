@@ -21,7 +21,7 @@ def main():
         while turn<64:
             for i in range(2):
                 board = Board(boardState, turn, i)
-                bGUI.setMessage("It is now " + ["black's", "white's"][i] + "turn.")
+                bGUI.setMessage("It is now " + ["black's", "white's"][i] + " turn.")
                 if player == i:
 
                     legalMoves = board.calculateLegalMoves(player)
