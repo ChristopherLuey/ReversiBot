@@ -20,7 +20,8 @@ class GUI:
         for i in range(1, 9):
             tempList = []
             for j in range(1, 9):
-                tempList.append(Tile(i, j, self.win))
+                tempList.append(Tile(i, j))
+                tempList[j-1].draw(self.win)
             self.tiles.append(tempList)
 
         # buttons and text
@@ -120,9 +121,13 @@ class GUI:
 
 
 class Tile:
-    def __init__(self, xCoord, yCoord, win):
-        self.Tile = Rectangle(Point(xCoord - 0.49, yCoord - 0.49), Point(xCoord + 0.49, yCoord + 0.49))
+    def __init__(self, xCoord, yCoord):
+        self.occupied = ""
+        self.xCoord, self.yCoord = xCoord, yCoord
 
+
+    def draw(self, win):
+        self.Tile = Rectangle(Point(self.xCoord - 0.49, self.yCoord - 0.49), Point(self.xCoord + 0.49, self.yCoord + 0.49))
         self.color = "black"
         self.fill = "darkgreen"
 
@@ -132,11 +137,9 @@ class Tile:
 
         self.Tile.draw(win)
 
-        self.xCoord, self.yCoord = xCoord, yCoord
-
         self.occupied = ""
 
-        self.piece = Circle(Point(xCoord, yCoord), 0.45)
+        self.piece = Circle(Point(self.xCoord, self.yCoord), 0.45)
         self.piece.setFill(self.fill)
         self.piece.setOutline(self.fill)
 
@@ -159,14 +162,15 @@ class Tile:
         return self.xCoord - 0.5 < pt.getX() < self.xCoord + 0.5 and self.yCoord - 0.5 < pt.getY() < self.yCoord + 0.5
 
     def setOccupied(self, color):
+        self.occupied = color
+
+    def drawPiece(self, color):
         if color == "":
-            self.occupied = ""
             self.piece.setFill(self.fill)
             self.piece.setOutline(self.fill)
         else:
             self.piece.setFill(color)
             self.piece.setOutline(color)
-            self.occupied = color
 
     def getOccupied(self):
         return self.occupied
