@@ -35,12 +35,12 @@ class GUI:
         self.quitButton.setActive()
         self.quitButton.draw(self.win)
 
-        self.textBackground = Rectangle(Point(10, 2.5), Point(14, 6.5))
+        self.textBackground = Rectangle(Point(10, 2.5), Point(14, 8.5))
         self.textBackground.setFill("lightgrey")
         self.textBackground.setOutline("lightgrey")
         self.textBackground.draw(self.win)
 
-        self.text = Text(Point(12, 4.5), "")
+        self.text = Text(Point(12, 5.5), "")
         self.text.setSize(16)
         self.text.setFace("courier")
         self.text.draw(self.win)
