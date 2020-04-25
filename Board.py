@@ -3,8 +3,8 @@
 # Date: 4/28/20
 # Board class and Matrix class
 
-from GUI import Tile
 import math
+import tensorflow as tf
 
 class Board:
     def __init__(self, boardState, turn, player):
@@ -17,11 +17,11 @@ class Board:
         # Define Constants and Other Non-linear functions
         self.stableDiskWeight = 1.0
         self.interiorDiskWeight = 1.0
-        self.frontierDiskWeight = 1.0
+        self.frontierDiskWeight = -1.0
         # Overtime the number of tiles that the machine can flip becomes more valuable
         self.flipWeightPower = 1.002
         self.flipWeight = turn**self.flipWeightPower
-        self.weightMatrixWeight = 1.0
+        self.weightMatrixWeight = 1.7
         # Overtime potential moves becomes less valuable
         self.potentialMovesWeightBase = 1.2
         self.potentialMovesWeight = self.calculatePotentialMovesWeight(self.turn)
@@ -42,13 +42,9 @@ class Board:
         self.opponentPotentialFlips = 0
         self.opponentNumberOfTiles = 0
 
-        self.weightAdjustmentBias = 0.0
-
+        self.weightAdjustment = 0.0
         self.turn = 0
 
-        # Corner, edges, buffer
-        # Stable disks: cannot flip
-        # Frontier vs interior disks: maximize interior disks
 
     def evaluateBoard(self):
         self.stableDiskCount = self.calculateStableDiskCount(self.player)[0]
@@ -104,13 +100,6 @@ class Board:
         else: return -utility
 
 
-    def copy(self):
-        # Make a copy after changing to board state
-        boardState = list(self.boardState.copy())
-        b = Board(boardState, self.turn, 1-self.player)
-        b.setPlayer(self.playerLegacy)
-        return b
-
     def getTurn(self):
         return self.turn
 
@@ -122,9 +111,6 @@ class Board:
 
     def incrementTurns(self):
         self.turn+=1
-
-    def utilityScore(self, weight, score):
-        return weight*score
 
     def updateBoard(self, boardState):
         self.boardState = boardState
@@ -201,8 +187,8 @@ class Board:
 
     def calculateScore(self):
         score = [0,0]
-        for i in range(len(self.boardState)):
-            for j in range(len(self.boardState[0])):
+        for i in range(8):
+            for j in range(8):
                 if self.boardState[i][j] == "white":
                     score[1] = score[1] + 1
                 elif self.boardState[i][j] == "black":

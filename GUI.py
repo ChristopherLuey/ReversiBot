@@ -124,10 +124,10 @@ class GUI:
                     for k in validMove:
                         self.tilesDraw[k[0][0]][k[0][1]].unhighlight()
                     return anchor
-        else:
-            time.sleep(1.0)
-            for k in validMove:
-                self.tilesDraw[k[0][0]][k[0][1]].unhighlight()
+
+    def unhighlightSquares(self, validMove):
+        for k in validMove:
+            self.tilesDraw[k[0][0]][k[0][1]].unhighlight()
 
 
     def draw(self, boardState):
@@ -135,6 +135,52 @@ class GUI:
             for j in range(8):
                 if not boardState[i][j] == "":
                     self.tilesDraw[i][j].drawPiece(boardState[i][j])
+    def reset(self):
+        # win = GraphWin("Play Again", 500, 200)
+        # mover, moveg, moveb = 90, 117, 8
+        #
+        # for i in range(104, 0, -1):
+        #     c = Circle(Point(650, 375), i * 10)
+        #     c.setFill(color_rgb(int(9 + mover * i / 102), int(130 - moveg * i / 102), int(230 - moveb * i / 102)))
+        #     c.setOutline(color_rgb(int(9 + mover * i / 102), int(130 - moveg * i / 102), int(230 - moveb * i / 102)))
+        #     c.setWidth(10)
+        #     c.draw(win)
+        #
+        # t = Text(Point(250, 40), "Would you like to play again?").draw(win)
+        # t.setSize(25)
+        # t.setStyle("bold")
+        #
+        # b = Button(Point(150, 140), 50, 125, "Yes")
+        # b.draw(win)
+        # b.setColor("dimgrey", "black")
+        # w = Button(Point(350, 140), 50, 125, "No")
+        # w.draw(win)
+        # w.setColor("white", "lightgrey")
+        # w.setTextColor("black")
+        # b.setActive()
+        # w.setActive()
+        #
+        # p = win.getMouse()
+        # while True:
+        #     if b.isClicked(p):
+        #         win.close()
+        #         # 0: black
+        #         for i in range(8):
+        #             for j in range(8):
+        #                 self.tilesDraw[i][j].drawPiece("")
+        #                 self.tiles[i][j] = ""
+        #         return True
+        #     elif w.isClicked(p):
+        #         win.close()
+        #         # 1: white
+        #         return False
+        #     p = win.getMouse()
+        for i in range(8):
+            for j in range(8):
+                self.tilesDraw[i][j].drawPiece("")
+                self.tiles[i][j] = ""
+        return True
+
 
 
 class Tile:

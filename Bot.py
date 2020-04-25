@@ -35,8 +35,6 @@ class Bot:
 
         if depth == 0 or legalMoves == []:
             eval = board.evaluateBoard()
-            board.printBoard()
-            print(eval)
             return eval, board, [0,0]
 
         if maximizingPlayer:
