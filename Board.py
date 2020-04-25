@@ -155,7 +155,7 @@ class Board:
                             xFactor, yFactor = factorList[k][0], factorList[k][1]
                             while (0 <= xFactor + row <= 7) and (0 <= yFactor + col <= 7) and self.boardState[xFactor + row][yFactor + col] == ["black", "white"][1 - player]:
                                 try:
-                                    if self.boardState[row + xFactor + factorList[k][0]][col + yFactor + factorList[k][1]] == "":
+                                    if (0 <= xFactor + row + factorList[k][0] <= 7) and (0 <= yFactor + col + factorList[k][1] <= 7) and self.boardState[row + xFactor + factorList[k][0]][col + yFactor + factorList[k][1]] == "":
                                         legalMoves.append([[row + xFactor + factorList[k][0], col + yFactor + factorList[k][1]], [row, col]])
                                 except:
                                     break
