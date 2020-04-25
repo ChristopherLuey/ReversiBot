@@ -137,7 +137,7 @@ class GUI:
 
         self.text2.setText(message)
 
-    self.messageClear(self):
+    def messageClear(self):
         self.message = []
 
         for i in range(17):
@@ -265,6 +265,8 @@ class GUI:
         #         self.tilesDraw[i][j].drawPiece("")
         #         self.tiles[i][j] = ""
         # return True
+
+        self.messageClear()
 
 
 
