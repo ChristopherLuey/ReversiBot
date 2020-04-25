@@ -35,7 +35,7 @@ class GUI:
         self.quitButton.setActive()
         self.quitButton.draw(self.win)
 
-        self.textBackground = Rectangle(Point(10, 3.5), Point(14, 5.5))
+        self.textBackground = Rectangle(Point(10, 2.5), Point(14, 6.5))
         self.textBackground.setFill("lightgrey")
         self.textBackground.setOutline("lightgrey")
         self.textBackground.draw(self.win)
