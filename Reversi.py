@@ -30,7 +30,7 @@ def main():
                     if not legalMoves:
                         bGUI.setMessage("There are no valid moves. The bot will now play.")
                     else:
-                        anchor = bGUI.highlightSquares(legalMoves)
+                        anchor = bGUI.highlightSquares(legalMoves, True)
                         if anchor:
                             boardState[legalMoves[anchor[0]][0][0]][legalMoves[anchor[0]][0][1]] = ["black", "white"][player]
                             board.calculateFlipSquares(legalMoves, anchor, player)
@@ -56,17 +56,17 @@ def main():
 
                         decision, board2, choice = bot.alphabeta(b, 1, -float("inf"), float("inf"), True)
 
-                        print(decision, board2, choice)
                         b.printBoard()
                         board.printBoard()
                         anchor = []
                         for index in range(len(legalMoves)):
                             if choice == legalMoves[index][0]:
                                 anchor.append(index)
-                        print(legalMoves, anchor)
                         board.move(legalMoves, anchor, 1-player)
                         board.calculateFlipSquares(legalMoves, anchor, 1-player)
+                        bGUI.highlightSquares(legalMoves, False)
                         bGUI.draw(boardState)
+                        bGUI.setMessage("AI has played " + str(choice[0]+1) + ", " + str(choice[1]+1))
 
 
 

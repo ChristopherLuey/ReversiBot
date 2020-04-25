@@ -5,6 +5,7 @@
 
 from graphics import *
 from Button import *
+import time
 
 class GUI:
     def __init__(self):
@@ -107,21 +108,27 @@ class GUI:
                 return 1
             p = win.getMouse()
 
-    def highlightSquares(self, validMove):
+    def highlightSquares(self, validMove, bool):
         for i in validMove:
             self.tilesDraw[i[0][0]][i[0][1]].highlight()
 
-        while True:
-            click = self.getClick()
-            if click == [-1, -1]: return -1
-            anchor = []
-            for index in range(len(validMove)):
-                if click == validMove[index][0]:
-                    anchor.append(index)
-            if anchor:
-                for k in validMove:
-                    self.tilesDraw[k[0][0]][k[0][1]].unhighlight()
-                return anchor
+        if bool:
+            while True:
+                click = self.getClick()
+                if click == [-1, -1]: return -1
+                anchor = []
+                for index in range(len(validMove)):
+                    if click == validMove[index][0]:
+                        anchor.append(index)
+                if anchor:
+                    for k in validMove:
+                        self.tilesDraw[k[0][0]][k[0][1]].unhighlight()
+                    return anchor
+        else:
+            time.sleep(1.0)
+            for k in validMove:
+                self.tilesDraw[k[0][0]][k[0][1]].unhighlight()
+
 
     def draw(self, boardState):
         for i in range(8):

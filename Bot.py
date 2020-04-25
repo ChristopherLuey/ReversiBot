@@ -33,12 +33,6 @@ class Bot:
             boardtemp.move(copy.deepcopy(legalMoves), anchor, boardtemp.getPlayer())
             boardtemp.calculateFlipSquares(copy.deepcopy(legalMoves), copy.deepcopy(anchor), player)
             boards.append(boardtemp)
-            boardtemp.printBoard()
-
-        print(boards)
-
-        # for i in boards:
-        #     i.printBoard()
 
         if depth == 0 or legalMoves == []:
             eval = board.evaluateBoard()

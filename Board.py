@@ -49,18 +49,14 @@ class Board:
         # Corner, edges, buffer
         # Stable disks: cannot flip
         # Frontier vs interior disks: maximize interior disks
-        print(self.boardState)
 
     def evaluateBoard(self):
-        # val is if the board is good or not
-
         self.stableDiskCount = self.calculateStableDiskCount(self.player)[0]
         self.interiorDiskCount = self.calculateInteriorDiskCount(self.player)[0]
         self.frontierDiskCount = self.calculateFrontierDiskCount(self.player)[0]
         self.potentialMobility = self.calculateMobility(self.player)
         self.potentialFlips = self.calculateFlipTilesPotential(self.player)[0]
         self.numberOfTiles = self.calculateNumberOfTiles(self.player)
-
 
         self.opponentStableDiskCount = self.calculateStableDiskCount(1-self.player)[0]
         self.opponentInteriorDiskCount = self.calculateInteriorDiskCount(1-self.player)[0]
