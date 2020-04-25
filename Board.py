@@ -344,3 +344,6 @@ class Matrix:
 
     def adjustWeight(self, row, col, weight):
         self.weightMatrix[row][col] = weight
+
+    def getMatrix(self,x,y):
+        return self.matrix

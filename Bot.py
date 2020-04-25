@@ -5,6 +5,7 @@
 
 from Board import *
 import copy
+from Matrix import *
 
 #https://en.wikipedia.org/wiki/Alpha–beta_pruning
 
@@ -18,7 +19,13 @@ class Bot:
             player = 1-self.player
         else:
             player = self.player
+
+
         legalMoves = board.calculateLegalMoves(player)
+
+        for moves in legalMoves:
+
+
         boards = []
         tempboard = copy.deepcopy(board.getBoard())
         for move in legalMoves:
