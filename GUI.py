@@ -78,6 +78,8 @@ class GUI:
         self.blackScore = 0
         self.whiteScore = 0
 
+    def updateScoreboard(self):
+        self.scoreboard.setMessage(("White Score: "+str(self.whiteScore)).ljust(10)+"\n"+("Black Score: "+str(self.blackScore)).ljust(10))
 
 
     def getBoard(self):
@@ -183,6 +185,7 @@ class GUI:
             for j in range(8):
                 if not boardState[i][j] == "":
                     self.tilesDraw[i][j].drawPiece(boardState[i][j])
+
     def reset(self):
         # win = GraphWin("Play Again", 500, 200)
         # mover, moveg, moveb = 90, 117, 8
