@@ -137,6 +137,16 @@ class GUI:
 
         self.text2.setText(message)
 
+    self.messageClear(self):
+        self.message = []
+
+        for i in range(17):
+            self.message.append("")
+            self.lineCount += 2
+
+        self.setMessage("")
+
+
     def startGame(self):
         win = GraphWin("Decide Player", 500, 200)
         mover, moveg, moveb = 90, 117, 8
