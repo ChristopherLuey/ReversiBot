@@ -17,13 +17,13 @@ class Board:
         # Define Constants and Other Non-linear functions
         self.stableDiskWeight = 1.0
         self.interiorDiskWeight = 1.0
-        self.frontierDiskWeight = -1.0
+        self.frontierDiskWeight = -2.0
         # Overtime the number of tiles that the machine can flip becomes more valuable
         self.flipWeightPower = 1.002
         self.flipWeight = turn**self.flipWeightPower
-        self.weightMatrixWeight = 1.7
+        self.weightMatrixWeight = 1.2
         # Overtime potential moves becomes less valuable
-        self.potentialMovesWeightBase = 1.2
+        self.potentialMovesWeightBase = 1.05
         self.potentialMovesWeight = self.calculatePotentialMovesWeight(self.turn)
         self.numberOfTilesWeight = 1.0
 
