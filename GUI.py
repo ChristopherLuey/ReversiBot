@@ -35,15 +35,27 @@ class GUI:
         self.quitButton.setActive()
         self.quitButton.draw(self.win)
 
-        self.textBackground = Rectangle(Point(10, 2.5), Point(14, 8.5))
+        self.textBackground = Rectangle(Point(10, 1.5), Point(14, 7.5))
         self.textBackground.setFill("lightgrey")
         self.textBackground.setOutline("lightgrey")
         self.textBackground.draw(self.win)
 
-        self.text = Text(Point(12, 5.5), "")
+        self.text = Text(Point(12, 4.5), "")
         self.text.setSize(16)
         self.text.setFace("courier")
         self.text.draw(self.win)
+
+        self.textBackground2 = Rectangle(Point(10, 8), Point(14, 8.75))
+        self.textBackground2.setFill("lightgrey")
+        self.textBackground2.setOutline("lightgrey")
+        self.textBackground2.draw(self.win)
+
+        self.text2 = Text(Point(12, 8.375), "")
+        self.text2.setSize(16)
+        self.text2.setFace("courier")
+        self.text2.draw(self.win)
+
+
 
     def getBoard(self):
         return self.tiles
@@ -70,6 +82,9 @@ class GUI:
                 else:
                     message = message + word + " "
         self.text.setText(message)
+
+    def setMessage2(self, message):
+        self.text2.setText(message)
 
     def startGame(self):
         win = GraphWin("Decide Player", 500, 200)

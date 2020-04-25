@@ -21,12 +21,12 @@ def main():
         while turn<64:
             for i in range(2):
                 board = Board(boardState, turn, i)
-                bGUI.setMessage("It is now " + ["black's", "white's"][i] + " turn.")
+                bGUI.setMessage2("It is now " + ["black's", "white's"][i] + " turn.")
                 if player == i:
 
                     legalMoves = board.calculateLegalMoves(player)
                     if not legalMoves:
-                        bGUI.setMessage("There are no valid moves. The bot will now play.")
+                        bGUI.setMessage2("There are no valid moves. The bot will now play.")
                     else:
                         anchor = bGUI.highlightSquares(legalMoves, True)
                         if anchor:
@@ -56,7 +56,7 @@ def main():
                 else:
                     legalMoves = board.calculateLegalMoves(1-player)
                     if not legalMoves:
-                        bGUI.setMessage("There are no valid moves. The player will now play.")
+                        bGUI.setMessage2("There are no valid moves. The player will now play.")
 
                     else:
 
