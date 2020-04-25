@@ -91,7 +91,7 @@ def startGame(boardState, bGUI):
     boardState[4][3] = "black"
     boardState[3][4] = "black"
     bGUI.draw(boardState)
-    #return bGUI.startGame()
+    return bGUI.startGame()
     return 0
 
 
