@@ -153,7 +153,7 @@ class Board:
                     for k in range(8):
                         if adjacentSquares[k] == True:
                             xFactor, yFactor = factorList[k][0], factorList[k][1]
-                            while (1 <= xFactor + row <= 6) and (1 <= yFactor + col <= 6) and self.boardState[xFactor + row][yFactor + col] == ["black", "white"][1 - player]:
+                            while (0 <= xFactor + row <= 7) and (0 <= yFactor + col <= 7) and self.boardState[xFactor + row][yFactor + col] == ["black", "white"][1 - player]:
                                 try:
                                     if self.boardState[row + xFactor + factorList[k][0]][col + yFactor + factorList[k][1]] == "":
                                         legalMoves.append([[row + xFactor + factorList[k][0], col + yFactor + factorList[k][1]], [row, col]])
