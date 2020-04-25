@@ -158,7 +158,7 @@ class Board:
                                     if self.boardState[row + xFactor + factorList[k][0]][col + yFactor + factorList[k][1]] == "":
                                         legalMoves.append([[row + xFactor + factorList[k][0], col + yFactor + factorList[k][1]], [row, col]])
                                 except:
-                                    break
+                                    pass
                                 xFactor, yFactor = xFactor + factorList[k][0], yFactor + factorList[k][1]
         return legalMoves
 
