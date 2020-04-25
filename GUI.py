@@ -45,12 +45,12 @@ class GUI:
         self.text.setFace("courier")
         self.text.draw(self.win)
 
-        self.textBackground2 = Rectangle(Point(10, 8), Point(14, 8.75))
+        self.textBackground2 = Rectangle(Point(10, 7.75), Point(14, 8.75))
         self.textBackground2.setFill("lightgrey")
         self.textBackground2.setOutline("lightgrey")
         self.textBackground2.draw(self.win)
 
-        self.text2 = Text(Point(12, 8.375), "")
+        self.text2 = Text(Point(12, 8.25), "")
         self.text2.setSize(16)
         self.text2.setFace("courier")
         self.text2.draw(self.win)
@@ -121,6 +121,20 @@ class GUI:
         self.text.setText("\n\n".join(self.message))
 
     def setMessage2(self, message):
+        if len(message) > 30:
+            wordList = message.split()
+            lineChrCount = 0
+            message = ""
+
+            for word in wordList:
+                lineChrCount = len(word) + lineChrCount
+                if lineChrCount > 30:
+                    message = message + "\n" + word + " "
+                    lineChrCount = len(word)
+
+                else:
+                    message = message + word + " "
+
         self.text2.setText(message)
 
     def startGame(self):
