@@ -28,31 +28,31 @@ def main():
                     if not legalMoves:
                         bGUI.setMessage("There are no valid moves. The bot will now play.")
                     else:
-                        # anchor = bGUI.highlightSquares(legalMoves, True)
-                        # if anchor:
-                        #     boardState[legalMoves[anchor[0]][0][0]][legalMoves[anchor[0]][0][1]] = ["black", "white"][player]
-                        #     board.calculateFlipSquares(legalMoves, anchor, player)
-                        #     bGUI.draw(boardState)
-                        # else:
-                        #     playing = False
-                        #     turn = 65
-                        #     break
+                        anchor = bGUI.highlightSquares(legalMoves, True)
+                        if anchor:
+                            boardState[legalMoves[anchor[0]][0][0]][legalMoves[anchor[0]][0][1]] = ["black", "white"][player]
+                            board.calculateFlipSquares(legalMoves, anchor, player)
+                            bGUI.draw(boardState)
+                        else:
+                            playing = False
+                            turn = 65
+                            break
 
-                        bot = Bot(player)
-
-                        b = Board(copy.deepcopy(boardState), turn, i)
-                        bGUI.highlightSquares(legalMoves, False)
-                        decision, board2, choice = bot.alphabeta(b, 2, -float("inf"), float("inf"), True)
-                        anchor = []
-                        for index in range(len(legalMoves)):
-                            if choice == legalMoves[index][0]:
-                                anchor.append(index)
-
-                        board.move(legalMoves, anchor, player)
-                        board.calculateFlipSquares(legalMoves, anchor, player)
-                        bGUI.unhighlightSquares(legalMoves)
-                        bGUI.draw(boardState)
-                        bGUI.setMessage("AI has played " + str(choice[0] + 1) + ", " + str(choice[1] + 1))
+                        # bot = Bot(player)
+                        #
+                        # b = Board(copy.deepcopy(boardState), turn, i)
+                        # bGUI.highlightSquares(legalMoves, False)
+                        # decision, board2, choice = bot.alphabeta(b, 2, -float("inf"), float("inf"), True)
+                        # anchor = []
+                        # for index in range(len(legalMoves)):
+                        #     if choice == legalMoves[index][0]:
+                        #         anchor.append(index)
+                        #
+                        # board.move(legalMoves, anchor, player)
+                        # board.calculateFlipSquares(legalMoves, anchor, player)
+                        # bGUI.unhighlightSquares(legalMoves)
+                        # bGUI.draw(boardState)
+                        # bGUI.setMessage("AI has played " + str(choice[0] + 1) + ", " + str(choice[1] + 1))
                 else:
                     legalMoves = board.calculateLegalMoves(1-player)
                     if not legalMoves:

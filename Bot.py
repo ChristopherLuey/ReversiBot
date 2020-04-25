@@ -32,9 +32,6 @@ class Bot:
 
 
         legalMoves = board.calculateLegalMoves(player)
-        print("LegalMoveList")
-        print(legalMoves)
-        legalMoves.sort(key = valueFunction)
 
         boards = []
         tempboard = copy.deepcopy(board.getBoard())

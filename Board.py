@@ -93,11 +93,15 @@ class Board:
         self.numberOfTilesScore = self.numberOfTilesWeight*(self.numberOfTiles-self.opponentNumberOfTiles)/maxTiles
 
         matrixScore, opponentMatrixScore = self.weightMatrix.calculateMatrix(self.boardState, self.player)
+        print(self.stableDiskScore, self.interiorDiskScore, self.frontierDiskScore, self.potentialMobilityScore, self.potentialFlipsScore, self.numberOfTilesScore, matrixScore, opponentMatrixScore)
 
-        utility = self.stableDiskScore + self.interiorDiskScore + self.frontierDiskScore + self.potentialMobilityScore + self.potentialFlipsScore + self.numberOfTilesScore + matrixScore-opponentMatrixScore
-
-        if self.playerLegacy == self.player: return utility
-        else: return -utility
+        utility = self.stableDiskScore + self.interiorDiskScore + self.frontierDiskScore + self.potentialMobilityScore + self.potentialFlipsScore + self.numberOfTilesScore +self.weightMatrixWeight*(matrixScore-opponentMatrixScore)
+        if self.playerLegacy == self.player:
+            print(-utility)
+            return -utility
+        else:
+            print(utility)
+            return utility
 
 
     def getTurn(self):
@@ -306,14 +310,14 @@ class Board:
 
 class Matrix:
     def __init__(self):
-        self.matrix = [[0.9, -0.9, 0.3, 0.5, 0.5, 0.3, -0.9, 0.9],
+        self.matrix = [[3.0, -0.9, 0.3, 0.5, 0.5, 0.3, -0.9, 3.0],
                         [-0.9, -0.9, 0.3, 0.5, 0.5, 0.3, -0.9, -0.9],
-                        [0.3, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.3],
-                        [0.5, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.5],
-                        [0.5, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.5],
-                        [0.3, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.3],
+                        [0.3, 0.2, 0.2, 0.5, 0.5, 0.5, 0.2, 0.3],
+                        [0.5, 0.2, 0.5, 0.2, 0.2, 0.2, 0.2, 0.5],
+                        [0.5, 0.2, 0.5, 0.2, 0.2, 0.2, 0.2, 0.5],
+                        [0.3, 0.2, 0.5, 0.2, 0.2, 0.2, 0.2, 0.3],
                         [-0.9, -0.9, 0.3, 0.5, 0.5, 0.3, -0.9, -0.9],
-                        [0.9, -0.9, 0.3, 0.5, 0.5, 0.3, -0.9, 0.9]]
+                        [3.0, -0.9, 0.3, 0.5, 0.5, 0.3, -0.9, 3.0]]
         # for i in range(8):
         #     self.matrix.append([])
         #     for j in range(8):
