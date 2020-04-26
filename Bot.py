@@ -64,7 +64,6 @@ class Bot:
 
                 alpha = max(alpha, value)
                 if alpha >= beta:
-                    print("trim max")
                     break
 
             return value, maxBoard, maxChoice
@@ -82,7 +81,6 @@ class Bot:
 
                 beta = min(beta, value)
                 if alpha >= beta:
-                    print("trim min")
                     break
 
             return value, maxBoard, maxChoice

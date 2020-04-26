@@ -260,14 +260,13 @@ class GUI:
                 # 1: white
                 return False
             p = win.getMouse()
+
+        self.messageClear()
         # for i in range(8):
         #     for j in range(8):
         #         self.tilesDraw[i][j].drawPiece("")
         #         self.tiles[i][j] = ""
         # return True
-
-        self.messageClear()
-
 
 
 class Tile:
