@@ -3,68 +3,27 @@
 # Date: 4/28/20
 # Board class and Matrix class
 
-import math
-#import tensorflow as tf
-import random
-import copy
-
 
 class Board:
     def __init__(self, boardState, turn, player):
-        self.weightMatrix = Matrix()
-        self.boardState = boardState
-        self.turn = turn
-        self.player = player
-        self.playerLegacy = player
+        self.weightMatrix, self.boardState, self.turn, self.player, self.playerLegacy = Matrix(), boardState, turn, player, player
 
         # #Define Constants and Other Non-linear functions
         self.stableDiskWeight = -0.000382517*(self.turn)**2 + 0.00000975089*(self.turn)**3+0.0143841*(self.turn)
-        if self.turn > 9:
-            self.interiorDiskWeight = 0
-        else:
-            self.interiorDiskWeight = 0.000914589*(self.turn)**2 - 0.0456537*(self.turn) +0.790311 - 0.0000062274*(self.turn)**3
-        self.frontierDiskWeight = -0.000229757*(self.turn)**2 - 0.0278324*(self.turn) + 0.916179 + 0.0000086104*(self.turn)**3
+        if self.turn > 9: self.interiorDiskWeight = 0
+        else: self.interiorDiskWeight = 0.000914589*(self.turn)**2 - 0.0456537*(self.turn) +0.790311 - 0.0000062274*(self.turn)**3
 
-        # Overtime the number of tiles that the machine can flip becomes more valuable
-        self.potentialMovesWeight = 0.00000842039*(self.turn)**3 - 0.0011153*(self.turn)**2 + 0.0271717*(self.turn) - 0.0317193
-
-        self.flipWeight = -0.000021963*(self.turn)**3 +0.00223059*(self.turn)**2 - 0.0340902*(self.turn) - 0.0634103
-
-        self.weightMatrixWeight = 2.0
-
-        self.numberOfTilesWeight = 0.0000844407*(self.turn)**2 +0.0275302*(self.turn)-0.432643
-
-        self.stableDiskCount = 0
-        self.interiorDiskCount = 0
-        self.frontierDiskCount = 0
-        self.potentialMobility = 0.0
-        self.potentialFlips = 0
-        self.numberOfTiles = 0
-
-        self.opponentStableDiskCount = 0
-        self.opponentInteriorDiskCount = 0
-        self.opponentFrontierDiskCount = 0
-        self.opponentPotentialMobility = 0.0
-        self.opponentPotentialFlips = 0
-        self.opponentNumberOfTiles = 0
-
-        self.weightAdjustment = 0.0
-
+        self.frontierDiskWeight, self.potentialMovesWeight, self.flipWeight, self.weightMatrixWeight, self.numberOfTilesWeight = -0.000229757*(self.turn)**2 - 0.0278324*(self.turn) + 0.916179 + 0.0000086104*(self.turn)**3, \
+                                                                                                                                 0.00000842039 * (self.turn) ** 3 - 0.0011153 * (self.turn) ** 2 + 0.0271717 * (self.turn) - 0.0317193, \
+                                                                                                                                 -0.000021963 * (self.turn) ** 3 + 0.00223059 * (self.turn) ** 2 - 0.0340902 * (self.turn) - 0.0634103, \
+                                                                                                                                 2.0, \
+                                                                                                                                 0.0000844407 * (self.turn) ** 2 + 0.0275302 * (self.turn) - 0.432643
 
     def evaluateBoard(self):
-        self.opponentPotentialMobility = self.calculateMobility(1-self.player)
-        self.opponentPotentialFlips = self.calculateFlipTilesPotential(1-self.player)[0]
-        self.potentialFlips = self.calculateFlipTilesPotential(self.player)[0]
-        self.potentialMobility = self.calculateMobility(self.player)
-        self.stableDiskCount = self.calculateStableDiskCount(self.player)[0]
-        self.interiorDiskCount = self.calculateInteriorDiskCount(self.player)[0]
-        self.frontierDiskCount = self.calculateFrontierDiskCount(self.player)[0]
-        self.numberOfTiles = self.calculateNumberOfTiles(self.player)
+        self.opponentPotentialMobility, self.opponentPotentialFlips, self.potentialFlips, self.potentialMobility = self.calculateMobility(1-self.player), self.calculateFlipTilesPotential(1-self.player)[0], self.calculateFlipTilesPotential(self.player)[0], self.calculateMobility(self.player)
+        self.stableDiskCount, self.interiorDiskCount, self.frontierDiskCount, self.numberOfTiles, self.opponentStableDiskCount, self.opponentInteriorDiskCount, self.opponentFrontierDiskCount, self.opponentNumberOfTiles = self.calculateStableDiskCount(self.player)[0], self.calculateInteriorDiskCount(self.player)[0],self.calculateFrontierDiskCount(self.player)[0],self.calculateNumberOfTiles(self.player), self.calculateStableDiskCount(1-self.player)[0], \
+                                                                                                                                                                                                                             self.calculateInteriorDiskCount(1 - self.player)[0], self.calculateFrontierDiskCount(1-self.player)[0], self.calculateNumberOfTiles(1-self.player)
 
-        self.opponentStableDiskCount = self.calculateStableDiskCount(1-self.player)[0]
-        self.opponentInteriorDiskCount = self.calculateInteriorDiskCount(1-self.player)[0]
-        self.opponentFrontierDiskCount = self.calculateFrontierDiskCount(1-self.player)[0]
-        self.opponentNumberOfTiles = self.calculateNumberOfTiles(1-self.player)
 
         maxStableDisk = (self.stableDiskCount + self.opponentStableDiskCount)
         if (self.stableDiskCount + self.opponentStableDiskCount) == 0: maxStableDisk = 1
@@ -84,20 +43,14 @@ class Board:
         maxTiles = (self.numberOfTiles+self.opponentNumberOfTiles)
         if (self.numberOfTiles+self.opponentNumberOfTiles) == 0: maxTiles = 1
 
-        self.stableDiskScore = self.stableDiskWeight*(self.stableDiskCount-self.opponentStableDiskCount) / maxStableDisk
-
-        self.interiorDiskScore = self.interiorDiskWeight*(self.interiorDiskCount-self.opponentInteriorDiskCount)/maxInterior
-
-        self.frontierDiskScore = self.frontierDiskWeight*(self.frontierDiskCount-self.opponentFrontierDiskCount)/maxFrontier
-
-        self.potentialMobilityScore = self.potentialMovesWeight*(self.potentialMobility-self.opponentPotentialMobility)/maxMobility
-
-        self.potentialFlipsScore = self.flipWeight*(self.potentialFlips-self.opponentPotentialFlips)/maxFlip
-
-        self.numberOfTilesScore = self.numberOfTilesWeight*(self.numberOfTiles-self.opponentNumberOfTiles)/maxTiles
+        self.stableDiskScore, self.interiorDiskScore, self.frontierDiskScore, self.potentialMobilityScore, self.potentialFlipsScore, self.numberOfTilesScore = self.stableDiskWeight*(self.stableDiskCount-self.opponentStableDiskCount) / maxStableDisk, \
+                                                                                                                                                               self.interiorDiskWeight * (self.interiorDiskCount - self.opponentInteriorDiskCount) / maxInterior, \
+                                                                                                                                                               self.frontierDiskWeight*(self.frontierDiskCount-self.opponentFrontierDiskCount)/maxFrontier, \
+                                                                                                                                                               self.potentialMovesWeight * (self.potentialMobility - self.opponentPotentialMobility) / maxMobility, \
+                                                                                                                                                               self.flipWeight * (self.potentialFlips - self.opponentPotentialFlips) / maxFlip, \
+                                                                                                                                                               self.numberOfTilesWeight * (self.numberOfTiles - self.opponentNumberOfTiles) / maxTiles
 
         matrixScore, opponentMatrixScore = self.weightMatrix.calculateMatrix(self.boardState, self.player)
-        self.matrixConstant = (matrixScore-opponentMatrixScore)
 
         utility = self.stableDiskScore + self.interiorDiskScore + self.frontierDiskScore + self.potentialMobilityScore + self.potentialFlipsScore + self.numberOfTilesScore +self.weightMatrixWeight*(matrixScore-opponentMatrixScore)
 
@@ -246,6 +199,7 @@ class Board:
         else:
             self.numberOfFlips, self.flipedSquares = numberOfFlips, flipedSquares
         return numberOfFlips, flipedSquares
+
 
     def calculateMobility(self, player):
         if player == self.player:

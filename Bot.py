@@ -12,15 +12,11 @@ import copy
 class Bot:
     def __init__(self, player):
         self.player = player
-        #self.model = tf.keras.models.load_model('model.h5')
-
 
 
     def alphabeta(self, board, depth, alpha, beta, maximizingPlayer):
-        if not maximizingPlayer:
-            player = 1-self.player
-        else:
-            player = self.player
+        if not maximizingPlayer: player = 1-self.player
+        else: player = self.player
 
 
         legalMoves = board.calculateLegalMoves(player)
@@ -41,7 +37,6 @@ class Bot:
 
         if depth == 0 or legalMoves == []:
             eval = board.evaluateBoard()
-            #eval = board.eval(self.model)
             return eval, board, [0,0]
 
         if maximizingPlayer:
@@ -66,68 +61,6 @@ class Bot:
 
             for boardVar in boards:
                 calcValue, l, m = self.alphabeta(boardVar, depth - 1, alpha, beta,True)
-
-                if calcValue < value:
-                    value = calcValue
-                    maxBoard = boardVar
-                    maxChoice = legalMoves[boards.index(boardVar)][0]
-
-                beta = min(beta, value)
-                if alpha >= beta:
-                    break
-
-            return value, maxBoard, maxChoice
-
-    def alphabeta2(self, board, depth, alpha, beta, maximizingPlayer):
-        if not maximizingPlayer:
-            player = 1-self.player
-        else:
-            player = self.player
-
-
-        legalMoves = board.calculateLegalMoves(player)
-
-        boards = []
-        tempboard = copy.deepcopy(board.getBoard())
-        for move in legalMoves:
-            anchor = []
-            for index in range(len(legalMoves)):
-                if move[0] == legalMoves[index][0]:
-                    anchor.append(index)
-
-            boardtemp = Board(copy.deepcopy(tempboard), board.getTurn(), player)
-            boardtemp.setPlayer(board.getPlayerLegacy())
-            boardtemp.move(copy.deepcopy(legalMoves), copy.deepcopy(anchor), boardtemp.getPlayer())
-            boardtemp.calculateFlipSquares(copy.deepcopy(legalMoves), copy.deepcopy(anchor), player)
-            boards.append(boardtemp)
-
-        if depth == 0 or legalMoves == []:
-            eval = board.evaluateBoard()
-            #eval = board.eval(self.model)
-            return eval, board, [0,0]
-
-        if maximizingPlayer:
-            value = -float("inf")
-
-            for boardVar in boards:
-                calcValue, l, m = self.alphabeta2(boardVar, depth - 1, alpha, beta,False)
-
-                if calcValue > value:
-                    value = calcValue
-                    maxBoard = boardVar
-                    maxChoice = legalMoves[boards.index(boardVar)][0]
-
-                alpha = max(alpha, value)
-                if alpha >= beta:
-                    break
-
-            return value, maxBoard, maxChoice
-
-        else:
-            value = float("inf")
-
-            for boardVar in boards:
-                calcValue, l, m = self.alphabeta2(boardVar, depth - 1, alpha, beta,True)
 
                 if calcValue < value:
                     value = calcValue
