@@ -30,7 +30,7 @@ class Board:
 
         self.flipWeight = -0.000021963*(self.turn)**3 +0.00223059*(self.turn)**2 - 0.0340902*(self.turn) - 0.0634103
 
-        self.weightMatrixWeight = 1.0
+        self.weightMatrixWeight = 2.0
 
         self.numberOfTilesWeight = 0.0000844407*(self.turn)**2 +0.0275302*(self.turn)-0.432643
 
@@ -52,18 +52,18 @@ class Board:
 
 
     def evaluateBoard(self):
+        self.opponentPotentialMobility = self.calculateMobility(1-self.player)
+        self.opponentPotentialFlips = self.calculateFlipTilesPotential(1-self.player)[0]
+        self.potentialFlips = self.calculateFlipTilesPotential(self.player)[0]
+        self.potentialMobility = self.calculateMobility(self.player)
         self.stableDiskCount = self.calculateStableDiskCount(self.player)[0]
         self.interiorDiskCount = self.calculateInteriorDiskCount(self.player)[0]
         self.frontierDiskCount = self.calculateFrontierDiskCount(self.player)[0]
-        self.potentialMobility = self.calculateMobility(self.player)
-        self.potentialFlips = self.calculateFlipTilesPotential(self.player)[0]
         self.numberOfTiles = self.calculateNumberOfTiles(self.player)
 
         self.opponentStableDiskCount = self.calculateStableDiskCount(1-self.player)[0]
         self.opponentInteriorDiskCount = self.calculateInteriorDiskCount(1-self.player)[0]
         self.opponentFrontierDiskCount = self.calculateFrontierDiskCount(1-self.player)[0]
-        self.opponentPotentialMobility = self.calculateMobility(1-self.player)
-        self.opponentPotentialFlips = self.calculateFlipTilesPotential(1-self.player)[0]
         self.opponentNumberOfTiles = self.calculateNumberOfTiles(1-self.player)
 
         maxStableDisk = (self.stableDiskCount + self.opponentStableDiskCount)
@@ -83,14 +83,6 @@ class Board:
 
         maxTiles = (self.numberOfTiles+self.opponentNumberOfTiles)
         if (self.numberOfTiles+self.opponentNumberOfTiles) == 0: maxTiles = 1
-
-        self.stableDiskConstant = (self.stableDiskCount-self.opponentStableDiskCount) / maxStableDisk
-        self.interiorDiskConstant = (self.interiorDiskCount-self.opponentInteriorDiskCount)/maxInterior
-        self.frontierDiskConstant = (self.frontierDiskCount-self.opponentFrontierDiskCount)/maxFrontier
-        self.potentialMobilityConstant = (self.potentialMobility-self.opponentPotentialMobility)/maxMobility
-        self.potentialFlipsConstant = (self.potentialFlips-self.opponentPotentialFlips)/maxFlip
-        self.numberOfTilesConstant = (self.numberOfTiles-self.opponentNumberOfTiles)/maxTiles
-
 
         self.stableDiskScore = self.stableDiskWeight*(self.stableDiskCount-self.opponentStableDiskCount) / maxStableDisk
 
@@ -186,6 +178,7 @@ class Board:
                                 except:
                                     break
                                 xFactor, yFactor = xFactor + factorList[k][0], yFactor + factorList[k][1]
+        self.legalMoves = legalMoves
         return legalMoves
 
     def setPlayer(self, player):
@@ -229,7 +222,10 @@ class Board:
         return self.calculateScore()[player]
 
     def calculateFlipTilesPotential(self, player):
-        legalMoves = self.calculateLegalMoves(player)
+        if player == self.player:
+            legalMoves = self.legalMoves
+        else:
+            legalMoves = self.opponentLegalMoves
         anchor = list(range(len(legalMoves)))
         numberOfFlips, flipedSquares = 0, []
         for k in anchor:
@@ -245,10 +241,18 @@ class Board:
                     diry = 0
                 flipedSquares.append([legalMoves[k][1][0] + i * dirx, legalMoves[k][1][1] + i * diry])
                 numberOfFlips+=1
+        if player != self.player:
+            self.opponentNumberOfFlips, self.opponentFlipedSquares = numberOfFlips, flipedSquares
+        else:
+            self.numberOfFlips, self.flipedSquares = numberOfFlips, flipedSquares
         return numberOfFlips, flipedSquares
 
     def calculateMobility(self, player):
-        return len(self.calculateLegalMoves(player))
+        if player == self.player:
+            return len(self.legalMoves)
+        else:
+            self.opponentLegalMoves = self.calculateLegalMoves(1-player)
+            return len(self.opponentLegalMoves)
 
     def calculateStableDiskCount(self, player):
         stableDisks = []
@@ -261,9 +265,12 @@ class Board:
         if flag:
             flipedSquares = []
 
-            opponentMoves = self.calculateLegalMoves(1-player)
+            opponentMoves = self.opponentLegalMoves
             for i in range(len(opponentMoves)):
-                numberOfFlips, flipedSquaresTemp = self.calculateFlipTilesPotential(1-player)
+                if player == self.player:
+                    numberOfFlips, flipedSquaresTemp = self.opponentNumberOfFlips, self.opponentFlipedSquares
+                else:
+                    numberOfFlips, flipedSquaresTemp = self.numberOfFlips, self.flipedSquares
                 flipedSquares.append(flipedSquaresTemp)
             for i in range(8):
                 for j in range(8):
@@ -301,13 +308,6 @@ class Board:
                     if flag: interiorDisk.append([row, col])
         return len(interiorDisk), interiorDisk
 
-
-    def calculatePotentialMovesWeight(self, turn):
-        return -math.log(turn + 1, self.potentialMovesWeightBase)
-
-
-    def adjustPotentialMovesWeightBase(self, float):
-        self.potentialMovesWeightBase = float
 
     def draw(self):
         for i in range(8):
