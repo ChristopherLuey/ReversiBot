@@ -190,7 +190,6 @@ class Board:
 
     def setPlayer(self, player):
         self.playerLegacy = player
-        print(self.playerLegacy)
 
     def calculateFlipSquares(self, legalMoves, anchor, player):
         numberOfFlips, flipedSquares = 0, []
@@ -355,7 +354,6 @@ class Matrix:
                 if boardState[i][j] == ["white", "black"][player]:
                     p2-=self.matrix[i][j]
                 total+=self.matrix[i][j]
-        print(p1/total, p2/total)
         return p1/total, p2/total
 
 

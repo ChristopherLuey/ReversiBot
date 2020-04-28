@@ -36,6 +36,8 @@ def main():
                             boardState[legalMoves[anchor[0]][0][0]][legalMoves[anchor[0]][0][1]] = ["black", "white"][player]
                             board.calculateFlipSquares(legalMoves, anchor, player)
                             bGUI.draw(boardState)
+                            bGUI.setMessage("Player has played " + str(legalMoves[anchor[0]][0][0] + 1) + ", " + str(legalMoves[anchor[0]][0][1] + 1))
+
                         else:
                             playing = False
                             turn = 65
@@ -68,8 +70,8 @@ def main():
                 board.incrementTurn()
                 legalMoves.clear()
                 turn+=1
-
-        playing = bGUI.reset()
+        if playing:
+            playing = bGUI.reset()
 
 
 def startGame(boardState, bGUI):
