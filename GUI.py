@@ -197,8 +197,14 @@ class GUI:
 
         if bool:
             while True:
-                click = self.getClick()
-                if click == [-1, -1]: return -1
+                if not self.win.isClosed():
+                    click = self.getClick()
+                else:
+                    self.win.close()
+                    return -1
+                if click == [-1, -1]:
+                    self.win.close()
+                    return -1
                 anchor = []
                 for index in range(len(validMove)):
                     if click == validMove[index][0]:
