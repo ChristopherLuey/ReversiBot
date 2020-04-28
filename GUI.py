@@ -69,7 +69,7 @@ class GUI:
 
         self.lineCount = 0
 
-
+        #adds blank lines to the AI readout
         for i in range(18):
             self.message.append("")
             self.lineCount += 2
@@ -82,7 +82,6 @@ class GUI:
 
     def updateScoreboard(self):
         self.scoreboard.setText(("White Score: "+str(self.whiteScore)).ljust(15)+"\n"+("Black Score: "+str(self.blackScore)).ljust(15))
-
 
     def getBoard(self):
         return self.tiles
@@ -113,6 +112,7 @@ class GUI:
         self.message.append(message)
         self.lineCount +=2
         
+        #removes excess text so that it creates a scrolling effect
         while self.lineCount >=36:
             extraLines = self.message[0].count("\n")
             self.lineCount -= extraLines + 2
@@ -120,6 +120,7 @@ class GUI:
 
         self.text.setText("\n\n".join(self.message))
 
+    #creates the player text box
     def setMessage2(self, message):
         if len(message) > 30:
             wordList = message.split()
@@ -137,6 +138,7 @@ class GUI:
 
         self.text2.setText(message)
 
+    #gets rid of all messages
     def messageClear(self):
         self.message = []
 
@@ -148,6 +150,7 @@ class GUI:
 
 
     def startGame(self):
+        #builds the player selection window
         win = GraphWin("Decide Player", 500, 200)
         mover, moveg, moveb = 90, 117, 8
 
@@ -172,6 +175,8 @@ class GUI:
         b.setActive()
         w.setActive()
 
+
+        #checks for clicks
         p = win.getMouse()
         while True:
             if b.isClicked(p):
@@ -184,6 +189,8 @@ class GUI:
                 return 1
             p = win.getMouse()
 
+
+    #highlights all of the squares in the list, gathers click
     def highlightSquares(self, validMove, bool):
         for i in validMove:
             self.tilesDraw[i[0][0]][i[0][1]].highlight()
@@ -205,7 +212,7 @@ class GUI:
         for k in validMove:
             self.tilesDraw[k[0][0]][k[0][1]].unhighlight()
 
-
+    #updates all tile status and scoreboard
     def draw(self, boardState):
         self.whiteScore,self.blackScore = 0,0
         for i in range(8):
@@ -221,6 +228,7 @@ class GUI:
         self.updateScoreboard()
 
     def reset(self):
+        #creates window
         win = GraphWin("Play Again", 500, 200)
         mover, moveg, moveb = 90, 117, 8
 
@@ -246,6 +254,7 @@ class GUI:
         w.setActive()
         self.messageClear()
 
+        #deals with clicks itself
         p = win.getMouse()
         while True:
             if b.isClicked(p):
@@ -270,6 +279,7 @@ class Tile:
 
 
     def draw(self, win, xCoord, yCoord):
+        #draws in tiles
         self.xCoord, self.yCoord = xCoord, yCoord
         self.Tile = Rectangle(Point(self.xCoord - 0.49, self.yCoord - 0.49), Point(self.xCoord + 0.49, self.yCoord + 0.49))
         self.color = "black"
@@ -309,6 +319,7 @@ class Tile:
         self.occupied = color
 
     def drawPiece(self, color):
+        #the piece is already sitting on the tile, highlights it in
         if color == "":
             self.piece.setFill(self.fill)
             self.piece.setOutline(self.fill)
