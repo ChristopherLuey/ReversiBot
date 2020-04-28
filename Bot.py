@@ -12,17 +12,16 @@ import copy
 class Bot:
     def __init__(self, player):
         self.player = player
-        #self.model = tf.keras.models.load_model('model.h5')
-
-
 
     def alphabeta(self, board, depth, alpha, beta, maximizingPlayer):
+        #determines which player perpective to look at
         if not maximizingPlayer:
             player = 1-self.player
         else:
             player = self.player
 
 
+        #gathers all legal moves, appends copy of board to list to simulate future moves on
         legalMoves = board.calculateLegalMoves(player)
 
         boards = []
@@ -39,45 +38,53 @@ class Bot:
             boardtemp.calculateFlipSquares(copy.deepcopy(legalMoves), copy.deepcopy(anchor), player)
             boards.append(boardtemp)
 
+        #ends recursion if the function runs enough moves ahead
         if depth == 0 or legalMoves == []:
             eval = board.evaluateBoard()
-            #eval = board.eval(self.model)
             return eval, board, [0,0]
 
+        #finds the maximum score possible from the possibilities of the board
         if maximizingPlayer:
             value = -float("inf")
 
             for boardVar in boards:
                 calcValue, l, m = self.alphabeta(boardVar, depth - 1, alpha, beta,False)
 
+                #going through every board, recording maximum value
                 if calcValue > value:
                     value = calcValue
                     maxBoard = boardVar
                     maxChoice = legalMoves[boards.index(boardVar)][0]
 
+                #cuts off if a higher value isn't possible
                 alpha = max(alpha, value)
                 if alpha >= beta:
                     break
 
             return value, maxBoard, maxChoice
 
+        #finds the maximum score possible from the possibilities of the board
         else:
             value = float("inf")
 
             for boardVar in boards:
                 calcValue, l, m = self.alphabeta(boardVar, depth - 1, alpha, beta,True)
 
+                #going through every board, recording maximum value
                 if calcValue < value:
                     value = calcValue
                     maxBoard = boardVar
                     maxChoice = legalMoves[boards.index(boardVar)][0]
 
+                #cuts off if a lower value isn't possible
                 beta = min(beta, value)
                 if alpha >= beta:
                     break
 
             return value, maxBoard, maxChoice
 
+
+    #second fuction for training
     def alphabeta2(self, board, depth, alpha, beta, maximizingPlayer):
         if not maximizingPlayer:
             player = 1-self.player
