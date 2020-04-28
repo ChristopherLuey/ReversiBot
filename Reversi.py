@@ -14,12 +14,13 @@ def main():
 
     while playing:
         # Gather board array
+        score = [0,0]
         boardState = bGUI.getBoard()
         # Determine who the human player is
         player, turn = startGame(boardState, bGUI), 0
 
         # Play the game until the game is over
-        while turn<60:
+        while (score[0]+score[1]) != 64:
             for i in range(2):
                 # Initialize new board
                 board = Board(boardState, turn, i)
@@ -58,10 +59,10 @@ def main():
                         # Gather bot decision
                         decision, board2, choice = bot.alphabeta(b, 3, -float("inf"), float("inf"), True)
 
+                        # Use this to determine which squares to flip
                         anchor = []
                         for index in range(len(legalMoves)):
-                            if choice == legalMoves[index][0]:
-                                anchor.append(index)
+                            if choice == legalMoves[index][0]: anchor.append(index)
                         board.move(legalMoves, anchor, 1-player)
                         board.calculateFlipSquares(legalMoves, anchor, 1-player)
                         bGUI.unhighlightSquares(legalMoves)
@@ -69,6 +70,7 @@ def main():
                         bGUI.setMessage("AI has played " + str(choice[0]+1) + ", " + str(choice[1]+1))
 
                 board.incrementTurn()
+                score=board.calculateScore()
                 legalMoves.clear()
                 turn+=1
         if playing:
