@@ -3,6 +3,8 @@
 # Date: 4/28/20
 # Board class and Matrix class
 
+import math
+
 
 class Board:
     def __init__(self, boardState, turn, player):
@@ -10,18 +12,33 @@ class Board:
         self.weightMatrix, self.boardState, self.turn, self.player, self.playerLegacy = Matrix(), boardState, turn, player, player
 
         # Define Weight Constants and Other Non-linear functions
-        self.stableDiskWeight = -0.000382517*(self.turn)**2 + 0.00000975089*(self.turn)**3+0.0143841*(self.turn)
-        if self.turn > 9: self.interiorDiskWeight = 0
-        else: self.interiorDiskWeight = 0.000914589*(self.turn)**2 - 0.0456537*(self.turn) +0.790311 - 0.0000062274*(self.turn)**3
-#0.00000842039 * (self.turn) ** 3 - 0.0011153 * (self.turn) ** 2 + 0.0271717 * (self.turn) - 0.0317193
-        self.frontierDiskWeight, self.potentialMovesWeight, self.flipWeight, self.weightMatrixWeight, self.numberOfTilesWeight = -0.000229757*(self.turn)**2 - 0.0278324*(self.turn) + 0.916179 + 0.0000086104*(self.turn)**3, \
-                                                                                                                                 -0.000382517 * (
-                                                                                                                                     self.turn) ** 2 + 0.00000975089 * (
-                                                                                                                                     self.turn) ** 3 + 0.0143841 * (
-                                                                                                                                     self.turn), \
-                                                                                                                                 -0.000021963 * (self.turn) ** 3 + 0.00223059 * (self.turn) ** 2 - 0.0340902 * (self.turn) - 0.0634103, \
-                                                                                                                                 2.0, \
-                                                                                                                                 0.0000844407 * (self.turn) ** 2 + 0.0275302 * (self.turn) - 0.432643
+#         self.stableDiskWeight = -0.000382517*(self.turn)**2 + 0.00000975089*(self.turn)**3+0.0143841*(self.turn)
+#         if self.turn > 9: self.interiorDiskWeight = 0
+#         else: self.interiorDiskWeight = 0.000914589*(self.turn)**2 - 0.0456537*(self.turn) +0.790311 - 0.0000062274*(self.turn)**3
+# #0.00000842039 * (self.turn) ** 3 - 0.0011153 * (self.turn) ** 2 + 0.0271717 * (self.turn) - 0.0317193
+#         self.frontierDiskWeight, self.potentialMovesWeight, self.flipWeight, self.weightMatrixWeight, self.numberOfTilesWeight = -0.000229757*(self.turn)**2 - 0.0278324*(self.turn) + 0.916179 + 0.0000086104*(self.turn)**3, \
+#                                                                                                                                  -0.000382517 * (
+#                                                                                                                                      self.turn) ** 2 + 0.00000975089 * (
+#                                                                                                                                      self.turn) ** 3 + 0.0143841 * (
+#                                                                                                                                      self.turn), \
+#                                                                                                                                  -0.000021963 * (self.turn) ** 3 + 0.00223059 * (self.turn) ** 2 - 0.0340902 * (self.turn) - 0.0634103, \
+#                                                                                                                                  2.0, \
+#                                                                                                                                  0.0000844407 * (self.turn) ** 2 + 0.0275302 * (self.turn) - 0.432643
+
+        self.stableDiskWeight = 1.0
+        self.interiorDiskWeight = 1.0
+        self.frontierDiskWeight = -1.0
+        self.frontierDiskWeight = -2.0
+        # Overtime the number of tiles that the machine can flip becomes more valuable
+        self.flipWeightPower = 1.002
+        self.flipWeight = turn ** 1.002
+        self.weightMatrixWeight = 1.7
+        self.weightMatrixWeight = 1.2
+        # Overtime potential moves becomes less valuable
+        self.potentialMovesWeightBase = 1.2
+        self.potentialMovesWeightBase = 1.05
+        self.potentialMovesWeight = -math.log(turn + 1, self.potentialMovesWeightBase)
+        self.numberOfTilesWeight = 1.0
 
     def evaluateBoard(self):
         # Gather board data and statistics
@@ -317,14 +334,23 @@ class Board:
 class Matrix:
     def __init__(self):
 
-        self.matrix = [ [20.0, -4.0, 3.0, 4.0, 4.0, 3.0, -4.0, 20.0],
-                        [-4.0, -5.0, -1.0, -1.0, -1.0, -1.0, -5.0, -4.0],
-                        [2.0, -1.0, 1.0, 0.2, 0.2, 1.0, -1.0, 2.0],
-                        [2.0, -1.0, 0.2, 1.0, 1.0, 0.2, -1.0, 2.0],
-                        [2.0, -1.0, 0.2, 1.0, 1.0, 0.2, -1.0, 2.0],
-                        [2.0, -1.0, 1.0, 0.2, 0.2, 1.0, -1.0, 2.0],
-                        [-4.0, -5.0, -1.0, -1.0, -1.0, -1.0, -5.0, -4.0],
-                        [20.0, -4.0, 3.0, 4.0, 4.0, 3.0, -4.0, 20.0]]
+        # self.matrix = [ [20.0, -4.0, 3.0, 4.0, 4.0, 3.0, -4.0, 20.0],
+        #                 [-4.0, -5.0, -1.0, -1.0, -1.0, -1.0, -5.0, -4.0],
+        #                 [2.0, -1.0, 1.0, 0.2, 0.2, 1.0, -1.0, 2.0],
+        #                 [2.0, -1.0, 0.2, 1.0, 1.0, 0.2, -1.0, 2.0],
+        #                 [2.0, -1.0, 0.2, 1.0, 1.0, 0.2, -1.0, 2.0],
+        #                 [2.0, -1.0, 1.0, 0.2, 0.2, 1.0, -1.0, 2.0],
+        #                 [-4.0, -5.0, -1.0, -1.0, -1.0, -1.0, -5.0, -4.0],
+        #                 [20.0, -4.0, 3.0, 4.0, 4.0, 3.0, -4.0, 20.0]]
+
+        self.matrix = [[3.0, -0.9, 0.3, 0.5, 0.5, 0.3, -0.9, 3.0],
+         [-0.9, -0.9, 0.3, 0.5, 0.5, 0.3, -0.9, -0.9],
+         [0.3, 0.2, 0.2, 0.5, 0.5, 0.5, 0.2, 0.3],
+         [0.5, 0.2, 0.5, 0.2, 0.2, 0.2, 0.2, 0.5],
+         [0.5, 0.2, 0.5, 0.2, 0.2, 0.2, 0.2, 0.5],
+         [0.3, 0.2, 0.5, 0.2, 0.2, 0.2, 0.2, 0.3],
+         [-0.9, -0.9, 0.3, 0.5, 0.5, 0.3, -0.9, -0.9],
+         [3.0, -0.9, 0.3, 0.5, 0.5, 0.3, -0.9, 3.0]]
 
 
     def calculateMatrix(self, boardState, player):
