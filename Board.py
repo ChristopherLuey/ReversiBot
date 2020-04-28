@@ -15,10 +15,10 @@ class Board:
         else: self.interiorDiskWeight = 0.000914589*(self.turn)**2 - 0.0456537*(self.turn) +0.790311 - 0.0000062274*(self.turn)**3
 #0.00000842039 * (self.turn) ** 3 - 0.0011153 * (self.turn) ** 2 + 0.0271717 * (self.turn) - 0.0317193
         self.frontierDiskWeight, self.potentialMovesWeight, self.flipWeight, self.weightMatrixWeight, self.numberOfTilesWeight = -0.000229757*(self.turn)**2 - 0.0278324*(self.turn) + 0.916179 + 0.0000086104*(self.turn)**3, \
-                                                                                                                                 -0.000021963 * (
-                                                                                                                                     self.turn) ** 3 + 0.00223059 * (
-                                                                                                                                     self.turn) ** 2 - 0.0340902 * (
-                                                                                                                                     self.turn) - 0.0634103, \
+                                                                                                                                 -0.000382517 * (
+                                                                                                                                     self.turn) ** 2 + 0.00000975089 * (
+                                                                                                                                     self.turn) ** 3 + 0.0143841 * (
+                                                                                                                                     self.turn), \
                                                                                                                                  -0.000021963 * (self.turn) ** 3 + 0.00223059 * (self.turn) ** 2 - 0.0340902 * (self.turn) - 0.0634103, \
                                                                                                                                  2.0, \
                                                                                                                                  0.0000844407 * (self.turn) ** 2 + 0.0275302 * (self.turn) - 0.432643
@@ -317,14 +317,14 @@ class Board:
 class Matrix:
     def __init__(self):
 
-        self.matrix = [ [15.0, -4.0, 3.0, 4.0, 4.0, 3.0, -4.0, 15.0],
+        self.matrix = [ [20.0, -4.0, 3.0, 4.0, 4.0, 3.0, -4.0, 20.0],
                         [-4.0, -5.0, -1.0, -1.0, -1.0, -1.0, -5.0, -4.0],
                         [2.0, -1.0, 1.0, 0.2, 0.2, 1.0, -1.0, 2.0],
                         [2.0, -1.0, 0.2, 1.0, 1.0, 0.2, -1.0, 2.0],
                         [2.0, -1.0, 0.2, 1.0, 1.0, 0.2, -1.0, 2.0],
                         [2.0, -1.0, 1.0, 0.2, 0.2, 1.0, -1.0, 2.0],
                         [-4.0, -5.0, -1.0, -1.0, -1.0, -1.0, -5.0, -4.0],
-                        [15.0, -4.0, 3.0, 4.0, 4.0, 3.0, -4.0, 15.0]]
+                        [20.0, -4.0, 3.0, 4.0, 4.0, 3.0, -4.0, 20.0]]
 
 
     def calculateMatrix(self, boardState, player):
