@@ -13,9 +13,12 @@ class Board:
         self.stableDiskWeight = -0.000382517*(self.turn)**2 + 0.00000975089*(self.turn)**3+0.0143841*(self.turn)
         if self.turn > 9: self.interiorDiskWeight = 0
         else: self.interiorDiskWeight = 0.000914589*(self.turn)**2 - 0.0456537*(self.turn) +0.790311 - 0.0000062274*(self.turn)**3
-
+#0.00000842039 * (self.turn) ** 3 - 0.0011153 * (self.turn) ** 2 + 0.0271717 * (self.turn) - 0.0317193
         self.frontierDiskWeight, self.potentialMovesWeight, self.flipWeight, self.weightMatrixWeight, self.numberOfTilesWeight = -0.000229757*(self.turn)**2 - 0.0278324*(self.turn) + 0.916179 + 0.0000086104*(self.turn)**3, \
-                                                                                                                                 0.00000842039 * (self.turn) ** 3 - 0.0011153 * (self.turn) ** 2 + 0.0271717 * (self.turn) - 0.0317193, \
+                                                                                                                                 -0.000021963 * (
+                                                                                                                                     self.turn) ** 3 + 0.00223059 * (
+                                                                                                                                     self.turn) ** 2 - 0.0340902 * (
+                                                                                                                                     self.turn) - 0.0634103, \
                                                                                                                                  -0.000021963 * (self.turn) ** 3 + 0.00223059 * (self.turn) ** 2 - 0.0340902 * (self.turn) - 0.0634103, \
                                                                                                                                  2.0, \
                                                                                                                                  0.0000844407 * (self.turn) ** 2 + 0.0275302 * (self.turn) - 0.432643

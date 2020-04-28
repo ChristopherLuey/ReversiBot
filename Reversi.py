@@ -57,7 +57,7 @@ def main():
                         b.setPlayer(1-player)
                         bGUI.highlightSquares(legalMoves, False)
                         # Gather bot decision
-                        decision, board2, choice = bot.alphabeta(b, 3, -float("inf"), float("inf"), True)
+                        decision, board2, choice = bot.alphabeta(b, 4, -float("inf"), float("inf"), True)
 
                         # Use this to determine which squares to flip
                         anchor = []
